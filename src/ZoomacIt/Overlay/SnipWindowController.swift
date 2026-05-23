@@ -1,4 +1,5 @@
 import AppKit
+import ObjectiveC
 import ScreenCaptureKit
 
 /// Controls Snip mode — capture screen, select region, copy to clipboard.
@@ -104,20 +105,24 @@ final class SnipWindowController {
         window.hasShadow = true
         window.isReleasedWhenClosed = false
 
-        let imageView = NSImageView(frame: NSRect(origin: .zero, size: frame.size))
-        imageView.image = NSImage(cgImage: image, size: NSSize(width: image.width, height: image.height))
-        imageView.imageScaling = .scaleProportionallyUpOrDown
-        imageView.wantsLayer = true
-        imageView.layer?.cornerRadius = 8
-        imageView.layer?.masksToBounds = true
-        imageView.layer?.borderColor = NSColor.white.withAlphaComponent(0.8).cgColor
-        imageView.layer?.borderWidth = 2
+        let button = NSButton(frame: NSRect(origin: .zero, size: frame.size))
+        button.isBordered = false
+        button.image = NSImage(cgImage: image, size: NSSize(width: image.width, height: image.height))
+        button.imageScaling = .scaleProportionallyUpOrDown
+        button.wantsLayer = true
+        button.layer?.cornerRadius = 8
+        button.layer?.masksToBounds = true
+        button.layer?.borderColor = NSColor.white.withAlphaComponent(0.8).cgColor
+        button.layer?.borderWidth = 2
+        button.target = nil
+        button.action = #selector(NSApp.revealSnipFile(_:))
+        objc_setAssociatedObject(button, "snipURL", url, .OBJC_ASSOCIATION_RETAIN)
 
-        window.contentView = imageView
+        window.contentView = button
         window.orderFrontRegardless()
 
-        // Fade out after 2 seconds (like macOS screenshot)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+        // Fade out after 4 seconds (click to reveal before it fades)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 4.0) {
             NSAnimationContext.runAnimationGroup({ context in
                 context.duration = 0.5
                 window.animator().alphaValue = 0
@@ -139,5 +144,15 @@ final class SnipWindowController {
         config.pixelFormat = kCVPixelFormatType_32BGRA
         config.showsCursor = false
         return try await SCScreenshotManager.captureImage(contentFilter: filter, configuration: config)
+    }
+}
+
+// MARK: - Reveal in Finder
+
+extension NSApplication {
+    @objc func revealSnipFile(_ sender: Any?) {
+        guard let button = sender as? NSButton,
+              let url = objc_getAssociatedObject(button, "snipURL") as? URL else { return }
+        NSWorkspace.shared.activateFileViewerSelecting([url])
     }
 }
