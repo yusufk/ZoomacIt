@@ -16,9 +16,6 @@ final class HotkeyManager: @unchecked Sendable {
     /// Called when the Break Timer hotkey (⌃3) is triggered.
     var onBreakHotkey: (() -> Void)?
 
-    private var hotKeyRef: EventHotKeyRef?
-    private var zoomHotKeyRef: EventHotKeyRef?
-    private var breakHotKeyRef: EventHotKeyRef?
     /// Called when the Snip hotkey (⌃4) is triggered.
     var onSnipHotkey: (() -> Void)?
 
@@ -133,21 +130,6 @@ final class HotkeyManager: @unchecked Sendable {
         NSLog("[HotkeyManager] Break hotkey registered: %@",
               Settings.hotkeyDisplayString(keyCode: Settings.shared.breakHotkeyKeyCode,
                                            modifiers: Settings.shared.breakHotkeyModifiers))
-            GetApplicationEventTarget(),
-            0,
-        )
-
-            return
-        }
-
-
-            GetApplicationEventTarget(),
-            0,
-        )
-
-            return
-        }
-
 
         // Register Snip hotkey
         let snipKeyID = EventHotKeyID(signature: hotKeySignature, id: snipHotKeyID)
@@ -200,10 +182,6 @@ final class HotkeyManager: @unchecked Sendable {
             UnregisterEventHotKey(ref)
             breakHotKeyRef = nil
         }
-            UnregisterEventHotKey(ref)
-        }
-            UnregisterEventHotKey(ref)
-        }
         if let ref = snipHotKeyRef {
             UnregisterEventHotKey(ref)
             snipHotKeyRef = nil
@@ -254,10 +232,6 @@ final class HotkeyManager: @unchecked Sendable {
         } else if hotKeyID.id == breakHotKeyID {
             DispatchQueue.main.async { [weak self] in
                 self?.onBreakHotkey?()
-            }
-            DispatchQueue.main.async { [weak self] in
-            }
-            DispatchQueue.main.async { [weak self] in
             }
         } else if hotKeyID.id == snipHotKeyID {
             DispatchQueue.main.async { [weak self] in

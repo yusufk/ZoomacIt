@@ -169,18 +169,6 @@ final class Settings: @unchecked Sendable {
         set { defaults.set(Int(newValue), forKey: Keys.breakHotkeyModifiers) }
     }
 
-    }
-
-    }
-
-    }
-
-    }
-
-    }
-
-    }
-
     var snipHotkeyKeyCode: UInt32 {
         get { UInt32(defaults.integer(forKey: Keys.snipHotkeyKeyCode)) }
         set { defaults.set(Int(newValue), forKey: Keys.snipHotkeyKeyCode) }

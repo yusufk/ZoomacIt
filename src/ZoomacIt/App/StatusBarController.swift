@@ -130,8 +130,6 @@ final class StatusBarController: NSObject {
         HotkeyManager.shared.onBreakHotkey?()
     }
 
-    }
-
     @objc private func snipAction() {
         HotkeyManager.shared.onSnipHotkey?()
     }

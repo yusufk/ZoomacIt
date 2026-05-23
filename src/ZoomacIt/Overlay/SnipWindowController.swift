@@ -1,5 +1,4 @@
 import AppKit
-import ObjectiveC
 import ScreenCaptureKit
 
 /// Controls Snip mode — capture screen, select region, copy to clipboard.
@@ -105,20 +104,10 @@ final class SnipWindowController {
         window.hasShadow = true
         window.isReleasedWhenClosed = false
 
-        let button = NSButton(frame: NSRect(origin: .zero, size: frame.size))
-        button.isBordered = false
-        button.image = NSImage(cgImage: image, size: NSSize(width: image.width, height: image.height))
-        button.imageScaling = .scaleProportionallyUpOrDown
-        button.wantsLayer = true
-        button.layer?.cornerRadius = 8
-        button.layer?.masksToBounds = true
-        button.layer?.borderColor = NSColor.white.withAlphaComponent(0.8).cgColor
-        button.layer?.borderWidth = 2
-        button.target = nil
-        button.action = #selector(NSApp.revealSnipFile(_:))
-        objc_setAssociatedObject(button, "snipURL", url, .OBJC_ASSOCIATION_RETAIN)
+        let clickView = SnipThumbnailView(frame: NSRect(origin: .zero, size: frame.size), image: image, fileURL: url)
+        clickView.onClose = { window.close() }
 
-        window.contentView = button
+        window.contentView = clickView
         window.orderFrontRegardless()
 
         // Fade out after 4 seconds (click to reveal before it fades)
@@ -147,12 +136,29 @@ final class SnipWindowController {
     }
 }
 
-// MARK: - Reveal in Finder
+// MARK: - Clickable Thumbnail
 
-extension NSApplication {
-    @objc func revealSnipFile(_ sender: Any?) {
-        guard let button = sender as? NSButton,
-              let url = objc_getAssociatedObject(button, "snipURL") as? URL else { return }
-        NSWorkspace.shared.activateFileViewerSelecting([url])
+private final class SnipThumbnailView: NSView {
+    var onClose: (() -> Void)?
+    private let fileURL: URL
+
+    init(frame: NSRect, image: CGImage, fileURL: URL) {
+        self.fileURL = fileURL
+        super.init(frame: frame)
+        wantsLayer = true
+        layer?.contents = image
+        layer?.contentsGravity = .resizeAspect
+        layer?.cornerRadius = 8
+        layer?.masksToBounds = true
+        layer?.borderColor = NSColor.white.withAlphaComponent(0.8).cgColor
+        layer?.borderWidth = 2
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) { fatalError() }
+
+    override func mouseDown(with event: NSEvent) {
+        NSWorkspace.shared.activateFileViewerSelecting([fileURL])
+        onClose?()
     }
 }

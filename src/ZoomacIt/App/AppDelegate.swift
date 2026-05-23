@@ -34,8 +34,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         hotkeyManager.onBreakHotkey = { [weak self] in
             self?.toggleBreakTimer()
         }
-        }
-        }
         hotkeyManager.onSnipHotkey = { [weak self] in
             self?.toggleSnip(saveToFile: false)
         }
@@ -47,6 +45,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationSupportsSecureRestorableState(_ app: NSApplication) -> Bool {
         true
+    }
+
+    // MARK: - Focus Management
+
+    private func savePreviousApp() {
+        previousApp = NSWorkspace.shared.frontmostApplication
+    }
+
+    private func restorePreviousApp() {
+        previousApp?.activate()
+        previousApp = nil
     }
 
     // MARK: - Draw Mode
@@ -184,44 +193,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
         controller.showSnipOverlay()
         snipController = controller
-    }
-
-
-            controller.stop()
-            return
-        }
-
-        controller.onFinished = { [weak self] in
-        }
-        controller.start()
-    }
-
-
-            controller.dismiss()
-            restorePreviousApp()
-            return
-        }
-
-        // Dismiss other modes first
-        if let drawController = overlayController {
-            drawController.dismiss()
-            overlayController = nil
-        }
-        if let stillZoom = zoomController {
-            stillZoom.dismiss()
-            zoomController = nil
-        }
-
-        savePreviousApp()
-        controller.onDismiss = { [weak self] in
-            self?.restorePreviousApp()
-        }
-        controller.onEnterDrawMode = { [weak self] snapshot in
-            guard let self else { return }
-            self.presentDrawMode(backgroundImage: snapshot)
-        }
-        controller.onShowFailed = { [weak self] in
-        }
     }
 
     // MARK: - Break Timer
