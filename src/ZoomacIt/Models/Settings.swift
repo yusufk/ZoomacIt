@@ -64,6 +64,10 @@ final class Settings: @unchecked Sendable {
         static let drawHotkeyModifiers = "hotkeyDrawModifiers"
         static let breakHotkeyKeyCode = "hotkeyBreakKeyCode"
         static let breakHotkeyModifiers = "hotkeyBreakModifiers"
+        static let demoTypeHotkeyKeyCode = "hotkeyDemoTypeKeyCode"
+        static let demoTypeHotkeyModifiers = "hotkeyDemoTypeModifiers"
+        static let demoTypeText = "demoTypeText"
+        static let demoTypeSpeed = "demoTypeSpeed"
 
         // Draw
         static let defaultPenColor = "drawDefaultPenColor"
@@ -102,6 +106,10 @@ final class Settings: @unchecked Sendable {
             Keys.drawHotkeyModifiers: Int(controlKey),
             Keys.breakHotkeyKeyCode: Int(kVK_ANSI_3),
             Keys.breakHotkeyModifiers: Int(controlKey),
+            Keys.demoTypeHotkeyKeyCode: Int(kVK_ANSI_D),
+            Keys.demoTypeHotkeyModifiers: Int(controlKey | shiftKey),
+            Keys.demoTypeText: "",
+            Keys.demoTypeSpeed: 15.0,
 
             // Draw
             Keys.defaultPenColor: PenColor.red.rawValue,
@@ -159,6 +167,26 @@ final class Settings: @unchecked Sendable {
     var breakHotkeyModifiers: UInt32 {
         get { UInt32(defaults.integer(forKey: Keys.breakHotkeyModifiers)) }
         set { defaults.set(Int(newValue), forKey: Keys.breakHotkeyModifiers) }
+    }
+
+    var demoTypeHotkeyKeyCode: UInt32 {
+        get { UInt32(defaults.integer(forKey: Keys.demoTypeHotkeyKeyCode)) }
+        set { defaults.set(Int(newValue), forKey: Keys.demoTypeHotkeyKeyCode) }
+    }
+
+    var demoTypeHotkeyModifiers: UInt32 {
+        get { UInt32(defaults.integer(forKey: Keys.demoTypeHotkeyModifiers)) }
+        set { defaults.set(Int(newValue), forKey: Keys.demoTypeHotkeyModifiers) }
+    }
+
+    var demoTypeText: String {
+        get { defaults.string(forKey: Keys.demoTypeText) ?? "" }
+        set { defaults.set(newValue, forKey: Keys.demoTypeText) }
+    }
+
+    var demoTypeSpeed: Double {
+        get { defaults.double(forKey: Keys.demoTypeSpeed) }
+        set { defaults.set(newValue, forKey: Keys.demoTypeSpeed) }
     }
 
     // MARK: - Draw

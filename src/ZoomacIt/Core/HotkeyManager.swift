@@ -16,9 +16,13 @@ final class HotkeyManager: @unchecked Sendable {
     /// Called when the Break Timer hotkey (⌃3) is triggered.
     var onBreakHotkey: (() -> Void)?
 
+    /// Called when the DemoType hotkey (⌃⇧D) is triggered.
+    var onDemoTypeHotkey: (() -> Void)?
+
     private var hotKeyRef: EventHotKeyRef?
     private var zoomHotKeyRef: EventHotKeyRef?
     private var breakHotKeyRef: EventHotKeyRef?
+    private var demoTypeHotKeyRef: EventHotKeyRef?
     private var eventHandlerRef: EventHandlerRef?
 
     /// Signature used to identify our hot-key events ('ZmIt')
@@ -26,6 +30,7 @@ final class HotkeyManager: @unchecked Sendable {
     private let zoomHotKeyID: UInt32 = 0
     private let drawHotKeyID: UInt32 = 1
     private let breakHotKeyID: UInt32 = 2
+    private let demoTypeHotKeyID: UInt32 = 4
 
     private init() {}
 
@@ -120,6 +125,26 @@ final class HotkeyManager: @unchecked Sendable {
         NSLog("[HotkeyManager] Break hotkey registered: %@",
               Settings.hotkeyDisplayString(keyCode: Settings.shared.breakHotkeyKeyCode,
                                            modifiers: Settings.shared.breakHotkeyModifiers))
+
+        // Register DemoType hotkey
+        let demoTypeKeyID = EventHotKeyID(signature: hotKeySignature, id: demoTypeHotKeyID)
+        let demoTypeStatus = RegisterEventHotKey(
+            Settings.shared.demoTypeHotkeyKeyCode,
+            Settings.shared.demoTypeHotkeyModifiers,
+            demoTypeKeyID,
+            GetApplicationEventTarget(),
+            0,
+            &demoTypeHotKeyRef
+        )
+
+        guard demoTypeStatus == noErr else {
+            NSLog("[HotkeyManager] Failed to register DemoType hotkey: %d", demoTypeStatus)
+            return
+        }
+
+        NSLog("[HotkeyManager] DemoType hotkey registered: %@",
+              Settings.hotkeyDisplayString(keyCode: Settings.shared.demoTypeHotkeyKeyCode,
+                                           modifiers: Settings.shared.demoTypeHotkeyModifiers))
     }
 
     func stop() {
@@ -134,6 +159,10 @@ final class HotkeyManager: @unchecked Sendable {
         if let ref = breakHotKeyRef {
             UnregisterEventHotKey(ref)
             breakHotKeyRef = nil
+        }
+        if let ref = demoTypeHotKeyRef {
+            UnregisterEventHotKey(ref)
+            demoTypeHotKeyRef = nil
         }
         if let handler = eventHandlerRef {
             RemoveEventHandler(handler)
@@ -177,6 +206,10 @@ final class HotkeyManager: @unchecked Sendable {
         } else if hotKeyID.id == breakHotKeyID {
             DispatchQueue.main.async { [weak self] in
                 self?.onBreakHotkey?()
+            }
+        } else if hotKeyID.id == demoTypeHotKeyID {
+            DispatchQueue.main.async { [weak self] in
+                self?.onDemoTypeHotkey?()
             }
         }
     }
