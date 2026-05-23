@@ -19,6 +19,13 @@ final class HotkeyManager: @unchecked Sendable {
     private var hotKeyRef: EventHotKeyRef?
     private var zoomHotKeyRef: EventHotKeyRef?
     private var breakHotKeyRef: EventHotKeyRef?
+    /// Called when the Snip hotkey (⌃4) is triggered.
+    var onSnipHotkey: (() -> Void)?
+
+    private var hotKeyRef: EventHotKeyRef?
+    private var zoomHotKeyRef: EventHotKeyRef?
+    private var breakHotKeyRef: EventHotKeyRef?
+    private var snipHotKeyRef: EventHotKeyRef?
     private var eventHandlerRef: EventHandlerRef?
 
     /// Signature used to identify our hot-key events ('ZmIt')
@@ -26,6 +33,7 @@ final class HotkeyManager: @unchecked Sendable {
     private let zoomHotKeyID: UInt32 = 0
     private let drawHotKeyID: UInt32 = 1
     private let breakHotKeyID: UInt32 = 2
+    private let snipHotKeyID: UInt32 = 5
 
     private init() {}
 
@@ -120,6 +128,41 @@ final class HotkeyManager: @unchecked Sendable {
         NSLog("[HotkeyManager] Break hotkey registered: %@",
               Settings.hotkeyDisplayString(keyCode: Settings.shared.breakHotkeyKeyCode,
                                            modifiers: Settings.shared.breakHotkeyModifiers))
+            GetApplicationEventTarget(),
+            0,
+        )
+
+            return
+        }
+
+
+            GetApplicationEventTarget(),
+            0,
+        )
+
+            return
+        }
+
+
+        // Register Snip hotkey
+        let snipKeyID = EventHotKeyID(signature: hotKeySignature, id: snipHotKeyID)
+        let snipStatus = RegisterEventHotKey(
+            Settings.shared.snipHotkeyKeyCode,
+            Settings.shared.snipHotkeyModifiers,
+            snipKeyID,
+            GetApplicationEventTarget(),
+            0,
+            &snipHotKeyRef
+        )
+
+        guard snipStatus == noErr else {
+            NSLog("[HotkeyManager] Failed to register Snip hotkey: %d", snipStatus)
+            return
+        }
+
+        NSLog("[HotkeyManager] Snip hotkey registered: %@",
+              Settings.hotkeyDisplayString(keyCode: Settings.shared.snipHotkeyKeyCode,
+                                           modifiers: Settings.shared.snipHotkeyModifiers))
     }
 
     func stop() {
@@ -134,6 +177,14 @@ final class HotkeyManager: @unchecked Sendable {
         if let ref = breakHotKeyRef {
             UnregisterEventHotKey(ref)
             breakHotKeyRef = nil
+        }
+            UnregisterEventHotKey(ref)
+        }
+            UnregisterEventHotKey(ref)
+        }
+        if let ref = snipHotKeyRef {
+            UnregisterEventHotKey(ref)
+            snipHotKeyRef = nil
         }
         if let handler = eventHandlerRef {
             RemoveEventHandler(handler)
@@ -177,6 +228,14 @@ final class HotkeyManager: @unchecked Sendable {
         } else if hotKeyID.id == breakHotKeyID {
             DispatchQueue.main.async { [weak self] in
                 self?.onBreakHotkey?()
+            }
+            DispatchQueue.main.async { [weak self] in
+            }
+            DispatchQueue.main.async { [weak self] in
+            }
+        } else if hotKeyID.id == snipHotKeyID {
+            DispatchQueue.main.async { [weak self] in
+                self?.onSnipHotkey?()
             }
         }
     }

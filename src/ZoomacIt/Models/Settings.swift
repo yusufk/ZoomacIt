@@ -64,6 +64,8 @@ final class Settings: @unchecked Sendable {
         static let drawHotkeyModifiers = "hotkeyDrawModifiers"
         static let breakHotkeyKeyCode = "hotkeyBreakKeyCode"
         static let breakHotkeyModifiers = "hotkeyBreakModifiers"
+        static let snipHotkeyKeyCode = "hotkeySnipKeyCode"
+        static let snipHotkeyModifiers = "hotkeySnipModifiers"
 
         // Draw
         static let defaultPenColor = "drawDefaultPenColor"
@@ -102,6 +104,8 @@ final class Settings: @unchecked Sendable {
             Keys.drawHotkeyModifiers: Int(controlKey),
             Keys.breakHotkeyKeyCode: Int(kVK_ANSI_3),
             Keys.breakHotkeyModifiers: Int(controlKey),
+            Keys.snipHotkeyKeyCode: Int(kVK_ANSI_4),
+            Keys.snipHotkeyModifiers: Int(controlKey),
 
             // Draw
             Keys.defaultPenColor: PenColor.red.rawValue,
@@ -159,6 +163,28 @@ final class Settings: @unchecked Sendable {
     var breakHotkeyModifiers: UInt32 {
         get { UInt32(defaults.integer(forKey: Keys.breakHotkeyModifiers)) }
         set { defaults.set(Int(newValue), forKey: Keys.breakHotkeyModifiers) }
+    }
+
+    }
+
+    }
+
+    }
+
+    }
+
+    }
+
+    }
+
+    var snipHotkeyKeyCode: UInt32 {
+        get { UInt32(defaults.integer(forKey: Keys.snipHotkeyKeyCode)) }
+        set { defaults.set(Int(newValue), forKey: Keys.snipHotkeyKeyCode) }
+    }
+
+    var snipHotkeyModifiers: UInt32 {
+        get { UInt32(defaults.integer(forKey: Keys.snipHotkeyModifiers)) }
+        set { defaults.set(Int(newValue), forKey: Keys.snipHotkeyModifiers) }
     }
 
     // MARK: - Draw

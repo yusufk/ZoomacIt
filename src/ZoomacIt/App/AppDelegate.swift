@@ -8,6 +8,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var overlayController: OverlayWindowController?
     private var zoomController: StillZoomWindowController?
     private var breakTimerController: BreakTimerWindowController?
+    private var snipController: SnipWindowController?
+    /// The app that was active before we took focus — restored on dismiss.
+    private var previousApp: NSRunningApplication?
     /// Stores the full-resolution source image when transitioning from Zoom → Draw,
     /// so that Escape from Draw can return to Zoom mode.
     private var zoomSourceForDrawReturn: CGImage?
@@ -30,6 +33,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
         hotkeyManager.onBreakHotkey = { [weak self] in
             self?.toggleBreakTimer()
+        }
+        }
+        }
+        hotkeyManager.onSnipHotkey = { [weak self] in
+            self?.toggleSnip()
         }
         hotkeyManager.start()
     }
@@ -146,6 +154,70 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         zoomController = controller
         zoomPanCenterForDrawReturn = nil
         zoomLevelForDrawReturn = nil
+    }
+
+    // MARK: - Snip
+
+    private func toggleSnip() {
+        if let controller = snipController {
+            controller.dismiss()
+            snipController = nil
+            return
+        }
+
+        savePreviousApp()
+        let controller = SnipWindowController()
+        controller.onDismiss = { [weak self] in
+            self?.snipController = nil
+            // Delay restore slightly to ensure window is fully closed
+            DispatchQueue.main.async {
+                self?.restorePreviousApp()
+            }
+        }
+        controller.onShowFailed = { [weak self] in
+            self?.snipController = nil
+            self?.restorePreviousApp()
+        }
+        controller.showSnipOverlay()
+        snipController = controller
+    }
+
+
+            controller.stop()
+            return
+        }
+
+        controller.onFinished = { [weak self] in
+        }
+        controller.start()
+    }
+
+
+            controller.dismiss()
+            restorePreviousApp()
+            return
+        }
+
+        // Dismiss other modes first
+        if let drawController = overlayController {
+            drawController.dismiss()
+            overlayController = nil
+        }
+        if let stillZoom = zoomController {
+            stillZoom.dismiss()
+            zoomController = nil
+        }
+
+        savePreviousApp()
+        controller.onDismiss = { [weak self] in
+            self?.restorePreviousApp()
+        }
+        controller.onEnterDrawMode = { [weak self] snapshot in
+            guard let self else { return }
+            self.presentDrawMode(backgroundImage: snapshot)
+        }
+        controller.onShowFailed = { [weak self] in
+        }
     }
 
     // MARK: - Break Timer

@@ -83,6 +83,12 @@ final class StatusBarController: NSObject {
         breakItem.target = self
         menu.addItem(breakItem)
 
+        let snipItem = NSMenuItem(title: "Snip", action: #selector(snipAction),
+                                  keyEquivalent: Settings.keyCodeToMenuCharacter(s.snipHotkeyKeyCode))
+        snipItem.keyEquivalentModifierMask = Settings.carbonToNSEventModifiers(s.snipHotkeyModifiers)
+        snipItem.target = self
+        menu.addItem(snipItem)
+
         menu.addItem(.separator())
 
         let prefsItem = NSMenuItem(title: "Preferences…", action: #selector(preferencesAction), keyEquivalent: ",")
@@ -116,6 +122,12 @@ final class StatusBarController: NSObject {
 
     @objc private func breakAction() {
         HotkeyManager.shared.onBreakHotkey?()
+    }
+
+    }
+
+    @objc private func snipAction() {
+        HotkeyManager.shared.onSnipHotkey?()
     }
 
     @objc private func preferencesAction() {
