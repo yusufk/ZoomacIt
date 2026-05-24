@@ -25,7 +25,7 @@ final class GeminiService {
         let boxes: [BoundingBox]?
     }
 
-    private let model = "gemini-2.0-flash"
+    private let models = ["gemini-2.0-flash", "gemini-2.0-flash-lite"]
     private let baseURL = "https://generativelanguage.googleapis.com/v1beta/models"
 
     var isAvailable: Bool {
@@ -38,6 +38,17 @@ final class GeminiService {
         let base64 = try encodeImage(image)
         let prompt = promptFor(task)
 
+        for model in models {
+            do {
+                return try await callAPI(model: model, base64: base64, prompt: prompt, task: task)
+            } catch GeminiError.rateLimited {
+                continue  // try next model
+            }
+        }
+        throw GeminiError.rateLimited
+    }
+
+    private func callAPI(model: String, base64: String, prompt: String, task: AITask) async throws -> AIResult {
         let requestBody: [String: Any] = [
             "contents": [[
                 "parts": [
@@ -55,7 +66,15 @@ final class GeminiService {
 
         let (data, response) = try await URLSession.shared.data(for: request)
 
-        guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else {
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw GeminiError.apiError("No response")
+        }
+
+        if httpResponse.statusCode == 429 {
+            throw GeminiError.rateLimited
+        }
+
+        guard httpResponse.statusCode == 200 else {
             let body = String(data: data, encoding: .utf8) ?? ""
             throw GeminiError.apiError(body)
         }
@@ -65,8 +84,7 @@ final class GeminiService {
 
         switch task {
         case .detectObjects, .smartReframe:
-            let boxes = parseBoxes(from: text)
-            return AIResult(text: text, boxes: boxes)
+            return AIResult(text: text, boxes: parseBoxes(from: text))
         default:
             return AIResult(text: text, boxes: nil)
         }
@@ -133,12 +151,14 @@ final class GeminiService {
     enum GeminiError: LocalizedError {
         case noApiKey
         case encodingFailed
+        case rateLimited
         case apiError(String)
 
         var errorDescription: String? {
             switch self {
             case .noApiKey: return "No Gemini API key configured."
             case .encodingFailed: return "Failed to encode image."
+            case .rateLimited: return "Rate limited — please wait a moment and try again."
             case .apiError(let msg): return "Gemini API error: \(msg)"
             }
         }
