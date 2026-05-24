@@ -216,7 +216,7 @@ final class Settings: @unchecked Sendable {
     }
 
     var geminiModel: String {
-        get { defaults.string(forKey: Keys.geminiModel) ?? "gemini-2.0-flash" }
+        get { defaults.string(forKey: Keys.geminiModel) ?? "gemini-flash-latest" }
         set { defaults.set(newValue, forKey: Keys.geminiModel) }
     }
 

@@ -20,7 +20,7 @@ struct GeneralTab: View {
 
     @State private var launchAtLogin: Bool = SMAppService.mainApp.status == .enabled
     @AppStorage(Settings.Keys.geminiApiKey) private var geminiApiKey: String = ""
-    @AppStorage(Settings.Keys.geminiModel) private var geminiModel: String = "gemini-2.0-flash"
+    @AppStorage(Settings.Keys.geminiModel) private var geminiModel: String = "gemini-flash-latest"
     @AppStorage(Settings.Keys.aiEnabled) private var aiEnabled: Bool = false
 
     var body: some View {
@@ -45,6 +45,7 @@ struct GeneralTab: View {
                 }
                 .disabled(!aiEnabled)
                 Picker("Model", selection: $geminiModel) {
+                    Text("Gemini Flash (Latest)").tag("gemini-flash-latest")
                     Text("Gemini 2.0 Flash").tag("gemini-2.0-flash")
                     Text("Gemini 2.0 Flash-Lite").tag("gemini-2.0-flash-lite")
                     Text("Gemini 2.5 Flash").tag("gemini-2.5-flash-preview-05-20")
