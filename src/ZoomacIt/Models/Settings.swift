@@ -292,6 +292,8 @@ final class Settings: @unchecked Sendable {
             Keys.zoomHotkeyKeyCode, Keys.zoomHotkeyModifiers,
             Keys.drawHotkeyKeyCode, Keys.drawHotkeyModifiers,
             Keys.breakHotkeyKeyCode, Keys.breakHotkeyModifiers,
+            Keys.snipHotkeyKeyCode, Keys.snipHotkeyModifiers,
+            Keys.snipSaveHotkeyKeyCode, Keys.snipSaveHotkeyModifiers,
             Keys.defaultPenColor, Keys.defaultPenWidth,
             Keys.highlighterOpacity, Keys.highlighterWidthMultiplier,
             Keys.spotlightDarkness,
