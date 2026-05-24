@@ -25,7 +25,7 @@ final class GeminiService {
         let boxes: [BoundingBox]?
     }
 
-    private let models = ["gemini-2.0-flash", "gemini-2.0-flash-lite"]
+    private let models: [String] = []  // populated dynamically
     private let baseURL = "https://generativelanguage.googleapis.com/v1beta/models"
 
     var isAvailable: Bool {
@@ -37,12 +37,15 @@ final class GeminiService {
 
         let base64 = try encodeImage(image)
         let prompt = promptFor(task)
+        let primary = Settings.shared.geminiModel
+        let fallbacks = [primary, "gemini-2.0-flash-lite"].filter { $0 != primary } + ["gemini-2.0-flash-lite"]
+        let modelsToTry = [primary] + fallbacks.prefix(1)
 
-        for model in models {
+        for model in modelsToTry {
             do {
                 return try await callAPI(model: model, base64: base64, prompt: prompt, task: task)
             } catch GeminiError.rateLimited {
-                continue  // try next model
+                continue
             }
         }
         throw GeminiError.rateLimited

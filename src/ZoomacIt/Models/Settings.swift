@@ -73,6 +73,7 @@ final class Settings: @unchecked Sendable {
 
         // AI
         static let geminiApiKey = "geminiApiKey"
+        static let geminiModel = "geminiModel"
         static let aiEnabled = "aiEnabled"
 
         // Draw
@@ -212,6 +213,11 @@ final class Settings: @unchecked Sendable {
     var geminiApiKey: String {
         get { defaults.string(forKey: Keys.geminiApiKey) ?? "" }
         set { defaults.set(newValue, forKey: Keys.geminiApiKey) }
+    }
+
+    var geminiModel: String {
+        get { defaults.string(forKey: Keys.geminiModel) ?? "gemini-2.0-flash" }
+        set { defaults.set(newValue, forKey: Keys.geminiModel) }
     }
 
     var aiEnabled: Bool {

@@ -20,6 +20,7 @@ struct GeneralTab: View {
 
     @State private var launchAtLogin: Bool = SMAppService.mainApp.status == .enabled
     @AppStorage(Settings.Keys.geminiApiKey) private var geminiApiKey: String = ""
+    @AppStorage(Settings.Keys.geminiModel) private var geminiModel: String = "gemini-2.0-flash"
     @AppStorage(Settings.Keys.aiEnabled) private var aiEnabled: Bool = false
 
     var body: some View {
@@ -41,6 +42,13 @@ struct GeneralTab: View {
                     Button("Get Free Key") {
                         NSWorkspace.shared.open(URL(string: "https://aistudio.google.com/apikey")!)
                     }
+                }
+                .disabled(!aiEnabled)
+                Picker("Model", selection: $geminiModel) {
+                    Text("Gemini 2.0 Flash").tag("gemini-2.0-flash")
+                    Text("Gemini 2.0 Flash-Lite").tag("gemini-2.0-flash-lite")
+                    Text("Gemini 2.5 Flash").tag("gemini-2.5-flash-preview-05-20")
+                    Text("Gemini 2.5 Pro").tag("gemini-2.5-pro-preview-05-06")
                 }
                 .disabled(!aiEnabled)
             }
