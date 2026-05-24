@@ -275,4 +275,32 @@ final class SettingsTests: XCTestCase {
         XCTAssertEqual(Settings.shared.drawHotkeyKeyCode, 11)
         XCTAssertEqual(Settings.shared.breakHotkeyKeyCode, 8)
     }
+
+    // MARK: - DemoType Settings
+
+    func testDefaultDemoTypeHotkey() {
+        XCTAssertEqual(Settings.shared.demoTypeHotkeyKeyCode, UInt32(kVK_ANSI_D))
+        XCTAssertEqual(Settings.shared.demoTypeHotkeyModifiers, UInt32(controlKey | shiftKey))
+    }
+
+    func testDefaultDemoTypeSettings() {
+        XCTAssertEqual(Settings.shared.demoTypeText, "")
+        XCTAssertEqual(Settings.shared.demoTypeSpeed, 15.0)
+    }
+
+    func testDemoTypeHotkeyRoundTrip() {
+        Settings.shared.demoTypeHotkeyKeyCode = UInt32(kVK_ANSI_T)
+        Settings.shared.demoTypeHotkeyModifiers = UInt32(controlKey | optionKey)
+
+        XCTAssertEqual(Settings.shared.demoTypeHotkeyKeyCode, UInt32(kVK_ANSI_T))
+        XCTAssertEqual(Settings.shared.demoTypeHotkeyModifiers, UInt32(controlKey | optionKey))
+    }
+
+    func testDemoTypeTextAndSpeedRoundTrip() {
+        Settings.shared.demoTypeText = "Hello, world!"
+        Settings.shared.demoTypeSpeed = 30.0
+
+        XCTAssertEqual(Settings.shared.demoTypeText, "Hello, world!")
+        XCTAssertEqual(Settings.shared.demoTypeSpeed, 30.0)
+    }
 }
