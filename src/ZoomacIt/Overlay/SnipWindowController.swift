@@ -7,6 +7,7 @@ final class SnipWindowController {
 
     var onDismiss: (() -> Void)?
     var onShowFailed: (() -> Void)?
+    var saveToFile: Bool = false
 
     private var snipWindow: OverlayWindow?
     private var snipView: SnipView?
@@ -49,8 +50,13 @@ final class SnipWindowController {
             self?.dismiss()
         }
         view.onSnip = { [weak self] croppedImage in
-            Self.copyToClipboard(croppedImage)
-            NSLog("[SnipWindowController] Snip copied to clipboard")
+            if self?.saveToFile == true {
+                Self.saveToDesktop(croppedImage)
+                NSLog("[SnipWindowController] Snip saved to Desktop")
+            } else {
+                Self.copyToClipboard(croppedImage)
+                NSLog("[SnipWindowController] Snip copied to clipboard")
+            }
             self?.dismiss()
         }
 
@@ -68,6 +74,57 @@ final class SnipWindowController {
         pasteboard.clearContents()
         let nsImage = NSImage(cgImage: image, size: NSSize(width: image.width, height: image.height))
         pasteboard.writeObjects([nsImage])
+    }
+
+    private static func saveToDesktop(_ image: CGImage) {
+        let desktop = FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first!
+        let timestamp = ISO8601DateFormatter().string(from: Date()).replacingOccurrences(of: ":", with: "-")
+        let url = desktop.appendingPathComponent("ZoomacIt-\(timestamp).png")
+        guard let dest = CGImageDestinationCreateWithURL(url as CFURL, "public.png" as CFString, 1, nil) else { return }
+        CGImageDestinationAddImage(dest, image, nil)
+        CGImageDestinationFinalize(dest)
+        showSaveNotification(image: image, url: url)
+    }
+
+    private static func showSaveNotification(image: CGImage, url: URL) {
+        guard let screen = NSScreen.main else { return }
+        let thumbSize: CGFloat = 160
+        let padding: CGFloat = 20
+        let frame = NSRect(
+            x: screen.visibleFrame.maxX - thumbSize - padding,
+            y: screen.visibleFrame.minY + padding,
+            width: thumbSize,
+            height: thumbSize
+        )
+
+        let window = NSWindow(contentRect: frame, styleMask: .borderless, backing: .buffered, defer: false)
+        window.isOpaque = false
+        window.backgroundColor = .clear
+        window.level = .floating
+        window.hasShadow = true
+        window.isReleasedWhenClosed = false
+
+        let imageView = NSImageView(frame: NSRect(origin: .zero, size: frame.size))
+        imageView.image = NSImage(cgImage: image, size: NSSize(width: image.width, height: image.height))
+        imageView.imageScaling = .scaleProportionallyUpOrDown
+        imageView.wantsLayer = true
+        imageView.layer?.cornerRadius = 8
+        imageView.layer?.masksToBounds = true
+        imageView.layer?.borderColor = NSColor.white.withAlphaComponent(0.8).cgColor
+        imageView.layer?.borderWidth = 2
+
+        window.contentView = imageView
+        window.orderFrontRegardless()
+
+        // Fade out after 2 seconds (like macOS screenshot)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            NSAnimationContext.runAnimationGroup({ context in
+                context.duration = 0.5
+                window.animator().alphaValue = 0
+            }, completionHandler: {
+                window.close()
+            })
+        }
     }
 
     private static func captureScreen(displayID: CGDirectDisplayID, screen: NSScreen, scaleFactor: CGFloat) async throws -> CGImage {

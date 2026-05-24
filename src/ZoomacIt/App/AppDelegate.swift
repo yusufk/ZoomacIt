@@ -37,7 +37,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
         }
         hotkeyManager.onSnipHotkey = { [weak self] in
-            self?.toggleSnip()
+            self?.toggleSnip(saveToFile: false)
+        }
+        hotkeyManager.onSnipSaveHotkey = { [weak self] in
+            self?.toggleSnip(saveToFile: true)
         }
         hotkeyManager.start()
     }
@@ -158,7 +161,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     // MARK: - Snip
 
-    private func toggleSnip() {
+    private func toggleSnip(saveToFile: Bool = false) {
         if let controller = snipController {
             controller.dismiss()
             snipController = nil
@@ -167,6 +170,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
         savePreviousApp()
         let controller = SnipWindowController()
+        controller.saveToFile = saveToFile
         controller.onDismiss = { [weak self] in
             self?.snipController = nil
             // Delay restore slightly to ensure window is fully closed
