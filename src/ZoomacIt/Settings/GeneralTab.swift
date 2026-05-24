@@ -35,9 +35,14 @@ struct GeneralTab: View {
 
             Section("AI Features") {
                 Toggle("Enable AI (requires Gemini API key)", isOn: $aiEnabled)
-                SecureField("Gemini API Key", text: $geminiApiKey)
-                    .textFieldStyle(.roundedBorder)
-                    .disabled(!aiEnabled)
+                HStack {
+                    SecureField("Gemini API Key", text: $geminiApiKey)
+                        .textFieldStyle(.roundedBorder)
+                    Button("Get Free Key") {
+                        NSWorkspace.shared.open(URL(string: "https://aistudio.google.com/apikey")!)
+                    }
+                }
+                .disabled(!aiEnabled)
             }
 
             Section {
