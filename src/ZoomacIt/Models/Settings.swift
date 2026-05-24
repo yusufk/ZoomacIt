@@ -71,6 +71,10 @@ final class Settings: @unchecked Sendable {
         static let snipSaveHotkeyKeyCode = "hotkeySnipSaveKeyCode"
         static let snipSaveHotkeyModifiers = "hotkeySnipSaveModifiers"
 
+        // AI
+        static let geminiApiKey = "geminiApiKey"
+        static let aiEnabled = "aiEnabled"
+
         // Draw
         static let defaultPenColor = "drawDefaultPenColor"
         static let defaultPenWidth = "drawDefaultPenWidth"
@@ -201,6 +205,18 @@ final class Settings: @unchecked Sendable {
     var snipSaveHotkeyModifiers: UInt32 {
         get { UInt32(defaults.integer(forKey: Keys.snipSaveHotkeyModifiers)) }
         set { defaults.set(Int(newValue), forKey: Keys.snipSaveHotkeyModifiers) }
+    }
+
+    // MARK: - AI
+
+    var geminiApiKey: String {
+        get { defaults.string(forKey: Keys.geminiApiKey) ?? "" }
+        set { defaults.set(newValue, forKey: Keys.geminiApiKey) }
+    }
+
+    var aiEnabled: Bool {
+        get { defaults.bool(forKey: Keys.aiEnabled) }
+        set { defaults.set(newValue, forKey: Keys.aiEnabled) }
     }
 
     // MARK: - Draw

@@ -19,6 +19,8 @@ struct GeneralTab: View {
     @AppStorage(Settings.Keys.snipSaveHotkeyModifiers) private var snipSaveModifiers: Int = Int(controlKey | shiftKey)
 
     @State private var launchAtLogin: Bool = SMAppService.mainApp.status == .enabled
+    @AppStorage(Settings.Keys.geminiApiKey) private var geminiApiKey: String = ""
+    @AppStorage(Settings.Keys.aiEnabled) private var aiEnabled: Bool = false
 
     var body: some View {
         Form {
@@ -29,6 +31,13 @@ struct GeneralTab: View {
                 HotkeyRow(label: "Break Timer", keyCode: $breakKeyCode, modifiers: $breakModifiers)
                 HotkeyRow(label: "Snip", keyCode: $snipKeyCode, modifiers: $snipModifiers)
                 HotkeyRow(label: "Snip to File", keyCode: $snipSaveKeyCode, modifiers: $snipSaveModifiers)
+            }
+
+            Section("AI Features") {
+                Toggle("Enable AI (requires Gemini API key)", isOn: $aiEnabled)
+                SecureField("Gemini API Key", text: $geminiApiKey)
+                    .textFieldStyle(.roundedBorder)
+                    .disabled(!aiEnabled)
             }
 
             Section {
