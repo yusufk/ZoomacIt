@@ -1,7 +1,5 @@
 import AppKit
-import ImageIO
 import ScreenCaptureKit
-import UniformTypeIdentifiers
 
 /// Controls Snip mode — capture screen, select region, copy to clipboard.
 @MainActor
@@ -16,11 +14,6 @@ final class SnipWindowController {
 
     func showSnipOverlay() {
         NSLog("[SnipWindowController] showSnipOverlay called")
-        guard CGPreflightScreenCaptureAccess() || CGRequestScreenCaptureAccess() else {
-            NSLog("[SnipWindowController] Screen Recording permission denied")
-            onShowFailed?()
-            return
-        }
         guard let screen = NSScreen.screenContainingMouse ?? NSScreen.main else {
             onShowFailed?()
             return
@@ -80,9 +73,7 @@ final class SnipWindowController {
     private static func copyToClipboard(_ image: CGImage) {
         let pasteboard = NSPasteboard.general
         pasteboard.clearContents()
-        let size = NSSize(width: CGFloat(image.width) / (NSScreen.main?.backingScaleFactor ?? 2.0),
-                          height: CGFloat(image.height) / (NSScreen.main?.backingScaleFactor ?? 2.0))
-        let nsImage = NSImage(cgImage: image, size: size)
+        let nsImage = NSImage(cgImage: image, size: NSSize(width: image.width, height: image.height))
         pasteboard.writeObjects([nsImage])
     }
 
@@ -90,7 +81,7 @@ final class SnipWindowController {
         let desktop = FileManager.default.urls(for: .desktopDirectory, in: .userDomainMask).first!
         let timestamp = ISO8601DateFormatter().string(from: Date()).replacingOccurrences(of: ":", with: "-")
         let url = desktop.appendingPathComponent("ZoomacIt-\(timestamp).png")
-        guard let dest = CGImageDestinationCreateWithURL(url as CFURL, UTType.png.identifier as CFString, 1, nil) else { return }
+        guard let dest = CGImageDestinationCreateWithURL(url as CFURL, "public.png" as CFString, 1, nil) else { return }
         CGImageDestinationAddImage(dest, image, nil)
         CGImageDestinationFinalize(dest)
         showSnipThumbnail(image: image, fileURL: url)
@@ -120,8 +111,9 @@ final class SnipWindowController {
         window.contentView = clickView
         window.orderFrontRegardless()
 
-        // Thumbnail fades out after 4 seconds; click to reveal in Finder
-        DispatchQueue.main.asyncAfter(deadline: .now() + 4.0) {
+        // Fade out after 4 seconds (cancelled if user right-clicks)
+        let fadeWork = DispatchWorkItem { [weak window] in
+            guard let window else { return }
             NSAnimationContext.runAnimationGroup({ context in
                 context.duration = 0.5
                 window.animator().alphaValue = 0
@@ -129,6 +121,8 @@ final class SnipWindowController {
                 window.close()
             })
         }
+        clickView.cancelFade = { fadeWork.cancel() }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 4.0, execute: fadeWork)
     }
 
     private static func captureScreen(displayID: CGDirectDisplayID, screen: NSScreen, scaleFactor: CGFloat) async throws -> CGImage {
@@ -150,6 +144,7 @@ final class SnipWindowController {
 
 private final class SnipThumbnailView: NSView {
     var onClose: (() -> Void)?
+    var cancelFade: (() -> Void)?
     private let fileURL: URL?
     private let snipImage: CGImage
 
@@ -178,6 +173,7 @@ private final class SnipThumbnailView: NSView {
     }
 
     override func rightMouseDown(with event: NSEvent) {
+        cancelFade?()
         menu = buildContextMenu()
         super.rightMouseDown(with: event)
     }
