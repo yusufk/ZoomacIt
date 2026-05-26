@@ -173,21 +173,21 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     // MARK: - Record
 
     private func toggleRecord() {
-        if recordController == nil {
-            let controller = RecordController()
-            controller.onRecordingStopped = { [weak self] url in
-                self?.recordController = nil
-                NSWorkspace.shared.activateFileViewerSelecting([url])
-            }
-            controller.onRecordingFailed = { [weak self] _ in
-                self?.recordController = nil
-            }
-            recordController = controller
+        if let controller = recordController, controller.isRecording {
+            controller.stopRecording()
+            return
         }
-        recordController?.toggleRecording()
-        if recordController?.isRecording == false {
-            recordController = nil
+
+        let controller = RecordController()
+        controller.onRecordingStopped = { [weak self] url in
+            self?.recordController = nil
+            NSWorkspace.shared.activateFileViewerSelecting([url])
         }
+        controller.onRecordingFailed = { [weak self] _ in
+            self?.recordController = nil
+        }
+        recordController = controller
+        controller.startRecording()
     }
 
     // MARK: - Preferences
