@@ -130,9 +130,13 @@ final class RecordController: NSObject {
     // MARK: - Esc Monitor
 
     private func installEscMonitor() {
-        escMonitor = NSEvent.addGlobalMonitorForEvents(matching: .keyDown) { [weak self] event in
-            if event.keyCode == 53 { // Esc
-                DispatchQueue.main.async { self?.stopRecording() }
+        let key = "AXTrustedCheckOptionPrompt" as CFString
+        let options = [key: true] as CFDictionary
+        if AXIsProcessTrustedWithOptions(options) {
+            escMonitor = NSEvent.addGlobalMonitorForEvents(matching: .keyDown) { [weak self] event in
+                if event.keyCode == 53 {
+                    DispatchQueue.main.async { self?.stopRecording() }
+                }
             }
         }
     }
