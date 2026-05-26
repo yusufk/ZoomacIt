@@ -28,6 +28,9 @@ final class RecordController: NSObject {
     private var outputURL: URL?
     private var indicatorWindow: NSWindow?
 
+    private var countdownWindow: NSWindow?
+    private var escMonitor: Any?
+
     // MARK: - Public
 
     func toggleRecording() {
@@ -46,17 +49,8 @@ final class RecordController: NSObject {
             return
         }
 
-        let screen = NSScreen.main ?? NSScreen.screens[0]
-        let displayID = screen.deviceDescription[NSDeviceDescriptionKey("NSScreenNumber")] as? CGDirectDisplayID ?? CGMainDisplayID()
-        let scaleFactor = screen.backingScaleFactor
-
-        Task {
-            do {
-                try await setupAndStart(displayID: displayID, scaleFactor: scaleFactor, screenSize: screen.frame.size)
-            } catch {
-                NSLog("[RecordController] Failed to start recording: %@", error.localizedDescription)
-                onRecordingFailed?(error)
-            }
+        showCountdown { [weak self] in
+            self?.beginCapture()
         }
     }
 
@@ -64,6 +58,7 @@ final class RecordController: NSObject {
         guard isRecording else { return }
         isRecording = false
         hideIndicator()
+        removeEscMonitor()
 
         stream?.stopCapture { _ in }
         stream = nil
@@ -80,6 +75,76 @@ final class RecordController: NSObject {
     }
 
     // MARK: - Private
+
+    private func beginCapture() {
+        let screen = NSScreen.main ?? NSScreen.screens[0]
+        let displayID = screen.deviceDescription[NSDeviceDescriptionKey("NSScreenNumber")] as? CGDirectDisplayID ?? CGMainDisplayID()
+        let scaleFactor = screen.backingScaleFactor
+
+        Task {
+            do {
+                try await setupAndStart(displayID: displayID, scaleFactor: scaleFactor, screenSize: screen.frame.size)
+                installEscMonitor()
+            } catch {
+                NSLog("[RecordController] Failed to start recording: %@", error.localizedDescription)
+                onRecordingFailed?(error)
+            }
+        }
+    }
+
+    // MARK: - Countdown
+
+    private func showCountdown(completion: @escaping () -> Void) {
+        guard let screen = NSScreen.main else { completion(); return }
+
+        let window = NSWindow(contentRect: screen.frame, styleMask: .borderless, backing: .buffered, defer: false)
+        window.level = .floating
+        window.isOpaque = false
+        window.backgroundColor = NSColor.black.withAlphaComponent(0.5)
+        window.ignoresMouseEvents = true
+        window.collectionBehavior = [.canJoinAllSpaces, .stationary]
+
+        let label = NSTextField(labelWithString: "3")
+        label.font = NSFont.systemFont(ofSize: 120, weight: .bold)
+        label.textColor = .white
+        label.alignment = .center
+        label.frame = NSRect(x: 0, y: (screen.frame.height - 140) / 2, width: screen.frame.width, height: 140)
+        window.contentView?.addSubview(label)
+        window.orderFront(nil)
+        countdownWindow = window
+
+        var count = 3
+        Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] timer in
+            count -= 1
+            if count > 0 {
+                label.stringValue = "\(count)"
+            } else {
+                timer.invalidate()
+                self?.countdownWindow?.orderOut(nil)
+                self?.countdownWindow = nil
+                completion()
+            }
+        }
+    }
+
+    // MARK: - Esc Monitor
+
+    private func installEscMonitor() {
+        escMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self] event in
+            if event.keyCode == 53 { // Esc
+                self?.stopRecording()
+                return nil
+            }
+            return event
+        }
+    }
+
+    private func removeEscMonitor() {
+        if let monitor = escMonitor {
+            NSEvent.removeMonitor(monitor)
+            escMonitor = nil
+        }
+    }
 
     private func setupAndStart(displayID: CGDirectDisplayID, scaleFactor: CGFloat, screenSize: CGSize) async throws {
         let content = try await SCShareableContent.excludingDesktopWindows(false, onScreenWindowsOnly: true)
