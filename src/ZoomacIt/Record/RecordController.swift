@@ -130,12 +130,10 @@ final class RecordController: NSObject {
     // MARK: - Esc Monitor
 
     private func installEscMonitor() {
-        escMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { [weak self] event in
+        escMonitor = NSEvent.addGlobalMonitorForEvents(matching: .keyDown) { [weak self] event in
             if event.keyCode == 53 { // Esc
-                self?.stopRecording()
-                return nil
+                DispatchQueue.main.async { self?.stopRecording() }
             }
-            return event
         }
     }
 
