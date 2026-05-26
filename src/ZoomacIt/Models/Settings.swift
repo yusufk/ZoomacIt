@@ -106,9 +106,9 @@ final class Settings: @unchecked Sendable {
             Keys.drawHotkeyModifiers: Int(controlKey),
             Keys.breakHotkeyKeyCode: Int(kVK_ANSI_3),
             Keys.breakHotkeyModifiers: Int(controlKey),
-            Keys.snipHotkeyKeyCode: Int(kVK_ANSI_4),
+            Keys.snipHotkeyKeyCode: Int(kVK_ANSI_6),
             Keys.snipHotkeyModifiers: Int(controlKey),
-            Keys.snipSaveHotkeyKeyCode: Int(kVK_ANSI_4),
+            Keys.snipSaveHotkeyKeyCode: Int(kVK_ANSI_6),
             Keys.snipSaveHotkeyModifiers: Int(controlKey | shiftKey),
 
             // Draw
