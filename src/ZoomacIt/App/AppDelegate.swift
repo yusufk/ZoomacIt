@@ -8,6 +8,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var overlayController: OverlayWindowController?
     private var zoomController: StillZoomWindowController?
     private var breakTimerController: BreakTimerWindowController?
+    private var recordController: RecordController?
     /// Stores the full-resolution source image when transitioning from Zoom → Draw,
     /// so that Escape from Draw can return to Zoom mode.
     private var zoomSourceForDrawReturn: CGImage?
@@ -30,6 +31,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
         hotkeyManager.onBreakHotkey = { [weak self] in
             self?.toggleBreakTimer()
+        }
+        hotkeyManager.onRecordHotkey = { [weak self] in
+            self?.toggleRecord()
         }
         hotkeyManager.start()
     }
@@ -164,6 +168,26 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     /// Called from BreakTimerWindowController when the timer is dismissed.
     func breakTimerDidEnd() {
         breakTimerController = nil
+    }
+
+    // MARK: - Record
+
+    private func toggleRecord() {
+        if recordController == nil {
+            let controller = RecordController()
+            controller.onRecordingStopped = { [weak self] url in
+                self?.recordController = nil
+                NSWorkspace.shared.activateFileViewerSelecting([url])
+            }
+            controller.onRecordingFailed = { [weak self] _ in
+                self?.recordController = nil
+            }
+            recordController = controller
+        }
+        recordController?.toggleRecording()
+        if recordController?.isRecording == false {
+            recordController = nil
+        }
     }
 
     // MARK: - Preferences

@@ -64,6 +64,8 @@ final class Settings: @unchecked Sendable {
         static let drawHotkeyModifiers = "hotkeyDrawModifiers"
         static let breakHotkeyKeyCode = "hotkeyBreakKeyCode"
         static let breakHotkeyModifiers = "hotkeyBreakModifiers"
+        static let recordHotkeyKeyCode = "hotkeyRecordKeyCode"
+        static let recordHotkeyModifiers = "hotkeyRecordModifiers"
 
         // Draw
         static let defaultPenColor = "drawDefaultPenColor"
@@ -102,6 +104,8 @@ final class Settings: @unchecked Sendable {
             Keys.drawHotkeyModifiers: Int(controlKey),
             Keys.breakHotkeyKeyCode: Int(kVK_ANSI_3),
             Keys.breakHotkeyModifiers: Int(controlKey),
+            Keys.recordHotkeyKeyCode: Int(kVK_ANSI_5),
+            Keys.recordHotkeyModifiers: Int(controlKey),
 
             // Draw
             Keys.defaultPenColor: PenColor.red.rawValue,
@@ -159,6 +163,16 @@ final class Settings: @unchecked Sendable {
     var breakHotkeyModifiers: UInt32 {
         get { UInt32(defaults.integer(forKey: Keys.breakHotkeyModifiers)) }
         set { defaults.set(Int(newValue), forKey: Keys.breakHotkeyModifiers) }
+    }
+
+    var recordHotkeyKeyCode: UInt32 {
+        get { UInt32(defaults.integer(forKey: Keys.recordHotkeyKeyCode)) }
+        set { defaults.set(Int(newValue), forKey: Keys.recordHotkeyKeyCode) }
+    }
+
+    var recordHotkeyModifiers: UInt32 {
+        get { UInt32(defaults.integer(forKey: Keys.recordHotkeyModifiers)) }
+        set { defaults.set(Int(newValue), forKey: Keys.recordHotkeyModifiers) }
     }
 
     // MARK: - Draw
@@ -264,6 +278,7 @@ final class Settings: @unchecked Sendable {
             Keys.zoomHotkeyKeyCode, Keys.zoomHotkeyModifiers,
             Keys.drawHotkeyKeyCode, Keys.drawHotkeyModifiers,
             Keys.breakHotkeyKeyCode, Keys.breakHotkeyModifiers,
+            Keys.recordHotkeyKeyCode, Keys.recordHotkeyModifiers,
             Keys.defaultPenColor, Keys.defaultPenWidth,
             Keys.highlighterOpacity, Keys.highlighterWidthMultiplier,
             Keys.spotlightDarkness,

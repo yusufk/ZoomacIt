@@ -11,6 +11,8 @@ struct GeneralTab: View {
     @AppStorage(Settings.Keys.drawHotkeyModifiers) private var drawModifiers: Int = Int(controlKey)
     @AppStorage(Settings.Keys.breakHotkeyKeyCode) private var breakKeyCode: Int = Int(kVK_ANSI_3)
     @AppStorage(Settings.Keys.breakHotkeyModifiers) private var breakModifiers: Int = Int(controlKey)
+    @AppStorage(Settings.Keys.recordHotkeyKeyCode) private var recordKeyCode: Int = Int(kVK_ANSI_5)
+    @AppStorage(Settings.Keys.recordHotkeyModifiers) private var recordModifiers: Int = Int(controlKey)
 
     @State private var launchAtLogin: Bool = SMAppService.mainApp.status == .enabled
 
@@ -20,6 +22,7 @@ struct GeneralTab: View {
                 HotkeyRow(label: "Zoom", keyCode: $zoomKeyCode, modifiers: $zoomModifiers)
                 HotkeyRow(label: "Draw", keyCode: $drawKeyCode, modifiers: $drawModifiers)
                 HotkeyRow(label: "Break Timer", keyCode: $breakKeyCode, modifiers: $breakModifiers)
+                HotkeyRow(label: "Record", keyCode: $recordKeyCode, modifiers: $recordModifiers)
             }
 
             Section {
@@ -33,6 +36,8 @@ struct GeneralTab: View {
         .onChange(of: drawModifiers) { _, _ in reregisterHotkeys() }
         .onChange(of: breakKeyCode) { _, _ in reregisterHotkeys() }
         .onChange(of: breakModifiers) { _, _ in reregisterHotkeys() }
+        .onChange(of: recordKeyCode) { _, _ in reregisterHotkeys() }
+        .onChange(of: recordModifiers) { _, _ in reregisterHotkeys() }
     }
 
     private var launchAtLoginBinding: Binding<Bool> {

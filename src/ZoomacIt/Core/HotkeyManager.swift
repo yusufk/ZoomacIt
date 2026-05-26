@@ -16,9 +16,13 @@ final class HotkeyManager: @unchecked Sendable {
     /// Called when the Break Timer hotkey (⌃3) is triggered.
     var onBreakHotkey: (() -> Void)?
 
+    /// Called when the Record hotkey (⌃5) is triggered.
+    var onRecordHotkey: (() -> Void)?
+
     private var hotKeyRef: EventHotKeyRef?
     private var zoomHotKeyRef: EventHotKeyRef?
     private var breakHotKeyRef: EventHotKeyRef?
+    private var recordHotKeyRef: EventHotKeyRef?
     private var eventHandlerRef: EventHandlerRef?
 
     /// Signature used to identify our hot-key events ('ZmIt')
@@ -26,6 +30,7 @@ final class HotkeyManager: @unchecked Sendable {
     private let zoomHotKeyID: UInt32 = 0
     private let drawHotKeyID: UInt32 = 1
     private let breakHotKeyID: UInt32 = 2
+    private let recordHotKeyID: UInt32 = 3
 
     private init() {}
 
@@ -120,6 +125,26 @@ final class HotkeyManager: @unchecked Sendable {
         NSLog("[HotkeyManager] Break hotkey registered: %@",
               Settings.hotkeyDisplayString(keyCode: Settings.shared.breakHotkeyKeyCode,
                                            modifiers: Settings.shared.breakHotkeyModifiers))
+
+        // Register Record hotkey
+        let recordKeyID = EventHotKeyID(signature: hotKeySignature, id: recordHotKeyID)
+        let recordStatus = RegisterEventHotKey(
+            Settings.shared.recordHotkeyKeyCode,
+            Settings.shared.recordHotkeyModifiers,
+            recordKeyID,
+            GetApplicationEventTarget(),
+            0,
+            &recordHotKeyRef
+        )
+
+        guard recordStatus == noErr else {
+            NSLog("[HotkeyManager] Failed to register record hotkey: %d", recordStatus)
+            return
+        }
+
+        NSLog("[HotkeyManager] Record hotkey registered: %@",
+              Settings.hotkeyDisplayString(keyCode: Settings.shared.recordHotkeyKeyCode,
+                                           modifiers: Settings.shared.recordHotkeyModifiers))
     }
 
     func stop() {
@@ -134,6 +159,10 @@ final class HotkeyManager: @unchecked Sendable {
         if let ref = breakHotKeyRef {
             UnregisterEventHotKey(ref)
             breakHotKeyRef = nil
+        }
+        if let ref = recordHotKeyRef {
+            UnregisterEventHotKey(ref)
+            recordHotKeyRef = nil
         }
         if let handler = eventHandlerRef {
             RemoveEventHandler(handler)
@@ -177,6 +206,10 @@ final class HotkeyManager: @unchecked Sendable {
         } else if hotKeyID.id == breakHotKeyID {
             DispatchQueue.main.async { [weak self] in
                 self?.onBreakHotkey?()
+            }
+        } else if hotKeyID.id == recordHotKeyID {
+            DispatchQueue.main.async { [weak self] in
+                self?.onRecordHotkey?()
             }
         }
     }
