@@ -65,25 +65,36 @@ RecordController
 
 ## Implementation Phases
 
-### Phase 1: Full Screen MP4 Recording
-1. Register Ctrl+5 hotkey
-2. On trigger: start SCStream (full display, similar to Live Zoom)
-3. Pipe frames to AVAssetWriter (H.264, .mp4)
-4. Show recording indicator (red dot + timer)
-5. On Ctrl+5 again or Esc: stop stream, finalize file, save to Desktop
-6. Add settings UI for output directory
+### Phase 1: Full Screen MP4 Recording ✅
+1. ~~Register Ctrl+5 hotkey~~
+2. ~~On trigger: start SCStream (full display, similar to Live Zoom)~~
+3. ~~Pipe frames to AVAssetWriter (H.264, .mp4)~~
+4. ~~Show recording indicator (red dot)~~
+5. ~~On Ctrl+5 again or Esc: stop stream, finalize file, save to Desktop~~
+6. ~~3-2-1 countdown before recording starts~~
+7. ~~Esc to stop (global monitor with Accessibility permission prompt)~~
+8. ~~Reveal file in Finder on stop~~
+9. ~~Add settings UI for hotkey~~
 
 ### Phase 2: Region & Window Recording
 1. Ctrl+Shift+5: show region selector (reuse SnipView overlay pattern)
 2. After selection: start recording only that rect (SCContentFilter with crop)
 3. Ctrl+Alt+5: detect window under cursor, record only that window
 4. SCContentFilter supports single-window capture natively
+5. Add hotkey settings for crop and window recording
 
 ### Phase 3: GIF Export + Audio
 1. Add GIF output option (buffer frames, export via ImageIO)
 2. GIF considerations: lower frame rate (10-15fps), palette optimization, file size
 3. Audio capture via SCStream's audio output (macOS 13+)
 4. Mux audio + video in AVAssetWriter
+5. Add settings toggle for audio capture
+
+### Phase 4: Polish
+1. Better recording indicator (elapsed time counter, larger, pulsing)
+2. Settings for output format (MP4/GIF), frame rate, save directory
+3. Notification on save (instead of or in addition to Finder reveal)
+4. Handle edge cases: display disconnect during recording, disk full
 
 ## Key Considerations
 
