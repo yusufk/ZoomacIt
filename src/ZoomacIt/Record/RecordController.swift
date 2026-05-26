@@ -40,7 +40,7 @@ final class RecordController: NSObject {
 
     func startRecording() {
         guard !isRecording else { return }
-        guard CGPreflightScreenCaptureAccess() else {
+        guard CGPreflightScreenCaptureAccess() || CGRequestScreenCaptureAccess() else {
             NSLog("[RecordController] Screen Recording permission denied")
             onRecordingFailed?(RecordError.permissionDenied)
             return
