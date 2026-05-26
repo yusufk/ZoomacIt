@@ -14,6 +14,11 @@ final class SnipWindowController {
 
     func showSnipOverlay() {
         NSLog("[SnipWindowController] showSnipOverlay called")
+        guard CGPreflightScreenCaptureAccess() || CGRequestScreenCaptureAccess() else {
+            NSLog("[SnipWindowController] Screen Recording permission denied")
+            onShowFailed?()
+            return
+        }
         guard let screen = NSScreen.screenContainingMouse ?? NSScreen.main else {
             onShowFailed?()
             return
