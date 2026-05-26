@@ -106,8 +106,8 @@ final class Settings: @unchecked Sendable {
             Keys.drawHotkeyModifiers: Int(controlKey),
             Keys.breakHotkeyKeyCode: Int(kVK_ANSI_3),
             Keys.breakHotkeyModifiers: Int(controlKey),
-            Keys.demoTypeHotkeyKeyCode: Int(kVK_ANSI_D),
-            Keys.demoTypeHotkeyModifiers: Int(controlKey | shiftKey),
+            Keys.demoTypeHotkeyKeyCode: Int(kVK_ANSI_7),
+            Keys.demoTypeHotkeyModifiers: Int(controlKey),
             Keys.demoTypeText: "",
             Keys.demoTypeSpeed: 15.0,
 
