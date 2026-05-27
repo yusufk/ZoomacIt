@@ -10,6 +10,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var liveZoomController: LiveZoomWindowController?
     private var breakTimerController: BreakTimerWindowController?
     private var demoTypeController: DemoTypeController?
+    private var snipController: SnipWindowController?
     /// The app that was active before we took focus — restored on dismiss.
     private var previousApp: NSRunningApplication?
     /// Stores the full-resolution source image when transitioning from Zoom → Draw,
@@ -41,6 +42,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         hotkeyManager.onDemoTypeHotkey = { [weak self] in
             self?.toggleDemoType()
         }
+        hotkeyManager.onSnipHotkey = { [weak self] in
+            self?.toggleSnip(saveToFile: false)
+        }
+        hotkeyManager.onSnipSaveHotkey = { [weak self] in
+            self?.toggleSnip(saveToFile: true)
+        }
         hotkeyManager.start()
     }
 
@@ -56,6 +63,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func restorePreviousApp() {
         previousApp?.activate(options: .activateIgnoringOtherApps)
+        previousApp?.activate()
         previousApp = nil
     }
 
@@ -228,6 +236,33 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
         demoTypeController = controller
         controller.start()
+    }
+
+    // MARK: - Snip
+
+    private func toggleSnip(saveToFile: Bool = false) {
+        if let controller = snipController {
+            controller.dismiss()
+            snipController = nil
+            return
+        }
+
+        savePreviousApp()
+        let controller = SnipWindowController()
+        controller.saveToFile = saveToFile
+        controller.onDismiss = { [weak self] in
+            self?.snipController = nil
+            // Delay restore slightly to ensure window is fully closed
+            DispatchQueue.main.async {
+                self?.restorePreviousApp()
+            }
+        }
+        controller.onShowFailed = { [weak self] in
+            self?.snipController = nil
+            self?.restorePreviousApp()
+        }
+        controller.showSnipOverlay()
+        snipController = controller
     }
 
     // MARK: - Break Timer

@@ -20,12 +20,19 @@ final class HotkeyManager: @unchecked Sendable {
     var onLiveZoomHotkey: (() -> Void)?
     /// Called when the DemoType hotkey (⌃⇧D) is triggered.
     var onDemoTypeHotkey: (() -> Void)?
+    /// Called when the Snip hotkey (⌃4) is triggered.
+    var onSnipHotkey: (() -> Void)?
+
+    /// Called when the Snip Save hotkey (⌃⇧4) is triggered.
+    var onSnipSaveHotkey: (() -> Void)?
 
     private var hotKeyRef: EventHotKeyRef?
     private var zoomHotKeyRef: EventHotKeyRef?
     private var breakHotKeyRef: EventHotKeyRef?
     private var liveZoomHotKeyRef: EventHotKeyRef?
     private var demoTypeHotKeyRef: EventHotKeyRef?
+    private var snipHotKeyRef: EventHotKeyRef?
+    private var snipSaveHotKeyRef: EventHotKeyRef?
     private var eventHandlerRef: EventHandlerRef?
 
     /// Signature used to identify our hot-key events ('ZmIt')
@@ -35,6 +42,8 @@ final class HotkeyManager: @unchecked Sendable {
     private let breakHotKeyID: UInt32 = 2
     private let liveZoomHotKeyID: UInt32 = 3
     private let demoTypeHotKeyID: UInt32 = 4
+    private let snipHotKeyID: UInt32 = 5
+    private let snipSaveHotKeyID: UInt32 = 6
 
     private init() {}
 
@@ -168,6 +177,44 @@ final class HotkeyManager: @unchecked Sendable {
         NSLog("[HotkeyManager] DemoType hotkey registered: %@",
               Settings.hotkeyDisplayString(keyCode: Settings.shared.demoTypeHotkeyKeyCode,
                                            modifiers: Settings.shared.demoTypeHotkeyModifiers))
+        // Register Snip hotkey
+        let snipKeyID = EventHotKeyID(signature: hotKeySignature, id: snipHotKeyID)
+        let snipStatus = RegisterEventHotKey(
+            Settings.shared.snipHotkeyKeyCode,
+            Settings.shared.snipHotkeyModifiers,
+            snipKeyID,
+            GetApplicationEventTarget(),
+            0,
+            &snipHotKeyRef
+        )
+
+        guard snipStatus == noErr else {
+            NSLog("[HotkeyManager] Failed to register Snip hotkey: %d", snipStatus)
+            return
+        }
+
+        NSLog("[HotkeyManager] Snip hotkey registered: %@",
+              Settings.hotkeyDisplayString(keyCode: Settings.shared.snipHotkeyKeyCode,
+                                           modifiers: Settings.shared.snipHotkeyModifiers))
+
+        // Register Snip Save hotkey
+        let snipSaveKeyID = EventHotKeyID(signature: hotKeySignature, id: snipSaveHotKeyID)
+        let snipSaveStatus = RegisterEventHotKey(
+            Settings.shared.snipSaveHotkeyKeyCode,
+            Settings.shared.snipSaveHotkeyModifiers,
+            snipSaveKeyID,
+            GetApplicationEventTarget(),
+            0,
+            &snipSaveHotKeyRef
+        )
+
+        if snipSaveStatus == noErr {
+            NSLog("[HotkeyManager] Snip Save hotkey registered: %@",
+                  Settings.hotkeyDisplayString(keyCode: Settings.shared.snipSaveHotkeyKeyCode,
+                                               modifiers: Settings.shared.snipSaveHotkeyModifiers))
+        } else {
+            NSLog("[HotkeyManager] Failed to register Snip Save hotkey: %d", snipSaveStatus)
+        }
     }
 
     func stop() {
@@ -190,6 +237,14 @@ final class HotkeyManager: @unchecked Sendable {
         if let ref = demoTypeHotKeyRef {
             UnregisterEventHotKey(ref)
             demoTypeHotKeyRef = nil
+        }
+        if let ref = snipHotKeyRef {
+            UnregisterEventHotKey(ref)
+            snipHotKeyRef = nil
+        }
+        if let ref = snipSaveHotKeyRef {
+            UnregisterEventHotKey(ref)
+            snipSaveHotKeyRef = nil
         }
         if let handler = eventHandlerRef {
             RemoveEventHandler(handler)
@@ -241,10 +296,18 @@ final class HotkeyManager: @unchecked Sendable {
         } else if hotKeyID.id == demoTypeHotKeyID {
             DispatchQueue.main.async { [weak self] in
                 self?.onDemoTypeHotkey?()
-    }
+            }
+        } else if hotKeyID.id == snipHotKeyID {
+            DispatchQueue.main.async { [weak self] in
+                self?.onSnipHotkey?()
+            }
+        } else if hotKeyID.id == snipSaveHotKeyID {
+            DispatchQueue.main.async { [weak self] in
+                self?.onSnipSaveHotkey?()
             }
         }
     }
+}
 
 // MARK: - C Callback
 

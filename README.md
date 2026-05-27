@@ -35,7 +35,7 @@ https://github.com/user-attachments/assets/5f7563e4-584b-4bab-99c4-70f7d3265f54
 | Draw | ✅ |
 | DemoType | ✅ |
 | Break Timer | ✅ |
-| Snip | |
+| Snip | ✅ |
 | Record | |
 
 > **Note:** DemoType and Record require **Accessibility permission** (System Settings → Privacy & Security → Accessibility) to simulate key events in other applications. You will be prompted on first use.

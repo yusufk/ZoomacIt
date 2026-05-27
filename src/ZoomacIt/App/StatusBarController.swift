@@ -93,6 +93,17 @@ final class StatusBarController: NSObject {
         demoTypeItem.keyEquivalentModifierMask = Settings.carbonToNSEventModifiers(s.demoTypeHotkeyModifiers)
         demoTypeItem.target = self
         menu.addItem(demoTypeItem)
+        let snipItem = NSMenuItem(title: "Snip", action: #selector(snipAction),
+                                  keyEquivalent: Settings.keyCodeToMenuCharacter(s.snipHotkeyKeyCode))
+        snipItem.keyEquivalentModifierMask = Settings.carbonToNSEventModifiers(s.snipHotkeyModifiers)
+        snipItem.target = self
+        menu.addItem(snipItem)
+
+        let snipSaveItem = NSMenuItem(title: "Snip to File", action: #selector(snipSaveAction),
+                                      keyEquivalent: Settings.keyCodeToMenuCharacter(s.snipSaveHotkeyKeyCode))
+        snipSaveItem.keyEquivalentModifierMask = Settings.carbonToNSEventModifiers(s.snipSaveHotkeyModifiers)
+        snipSaveItem.target = self
+        menu.addItem(snipSaveItem)
 
         menu.addItem(.separator())
 
@@ -135,6 +146,14 @@ final class StatusBarController: NSObject {
     }
     @objc private func demoTypeAction() {
         HotkeyManager.shared.onDemoTypeHotkey?()
+    }
+
+    @objc private func snipAction() {
+        HotkeyManager.shared.onSnipHotkey?()
+    }
+
+    @objc private func snipSaveAction() {
+        HotkeyManager.shared.onSnipSaveHotkey?()
     }
 
     @objc private func preferencesAction() {
