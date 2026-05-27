@@ -18,8 +18,6 @@ final class SnipView: NSView {
         self.scaleFactor = scaleFactor
         super.init(frame: frame)
         wantsLayer = true
-        layer?.contents = sourceImage
-        layer?.contentsGravity = .resizeAspectFill
     }
 
     @available(*, unavailable)
@@ -44,6 +42,10 @@ final class SnipView: NSView {
     // MARK: - Drawing
 
     override func draw(_ dirtyRect: NSRect) {
+        // Draw the source image as background (avoids layer.contents vs draw() conflict)
+        guard let context = NSGraphicsContext.current?.cgContext else { return }
+        context.draw(sourceImage, in: bounds)
+
         guard isDragging, selectionRect.width > 0, selectionRect.height > 0 else { return }
 
         // Dim everything outside selection
@@ -55,8 +57,14 @@ final class SnipView: NSView {
         NSGraphicsContext.current?.compositingOperation = .clear
         path.fill()
 
-        // Draw selection border
+        // Redraw image in selection area
         NSGraphicsContext.current?.compositingOperation = .sourceOver
+        context.saveGState()
+        context.clip(to: selectionRect)
+        context.draw(sourceImage, in: bounds)
+        context.restoreGState()
+
+        // Draw selection border
         NSColor.white.setStroke()
         let border = NSBezierPath(rect: selectionRect)
         border.lineWidth = 1.5
@@ -73,11 +81,15 @@ final class SnipView: NSView {
 
     override func mouseDragged(with event: NSEvent) {
         let current = convert(event.locationInWindow, from: nil)
+        let clampedCurrent = NSPoint(
+            x: min(max(current.x, 0), bounds.width),
+            y: min(max(current.y, 0), bounds.height)
+        )
         selectionRect = NSRect(
-            x: min(dragStart.x, current.x),
-            y: min(dragStart.y, current.y),
-            width: abs(current.x - dragStart.x),
-            height: abs(current.y - dragStart.y)
+            x: min(dragStart.x, clampedCurrent.x),
+            y: min(dragStart.y, clampedCurrent.y),
+            width: abs(clampedCurrent.x - dragStart.x),
+            height: abs(clampedCurrent.y - dragStart.y)
         )
         setNeedsDisplay(bounds)
     }
@@ -89,19 +101,20 @@ final class SnipView: NSView {
             return
         }
 
-        // Convert view coords to image pixel coords
+        // Convert view coords to image pixel coords, clamped to image bounds
+        let imageBounds = CGRect(x: 0, y: 0, width: sourceImage.width, height: sourceImage.height)
         let cropRect = CGRect(
             x: selectionRect.origin.x * scaleFactor,
             y: (bounds.height - selectionRect.origin.y - selectionRect.height) * scaleFactor,
             width: selectionRect.width * scaleFactor,
             height: selectionRect.height * scaleFactor
-        ).integral
+        ).integral.intersection(imageBounds)
 
-        if let cropped = sourceImage.cropping(to: cropRect) {
-            onSnip?(cropped)
-        } else {
+        guard !cropRect.isEmpty, let cropped = sourceImage.cropping(to: cropRect) else {
             onDismiss?()
+            return
         }
+        onSnip?(cropped)
     }
 
     // MARK: - Keyboard
