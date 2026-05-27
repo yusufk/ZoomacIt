@@ -189,6 +189,8 @@ final class HotkeyManager: @unchecked Sendable {
             NSLog("[HotkeyManager] Snip Save hotkey registered: %@",
                   Settings.hotkeyDisplayString(keyCode: Settings.shared.snipSaveHotkeyKeyCode,
                                                modifiers: Settings.shared.snipSaveHotkeyModifiers))
+        } else {
+            NSLog("[HotkeyManager] Failed to register Snip Save hotkey: %d", snipSaveStatus)
         }
     }
 
