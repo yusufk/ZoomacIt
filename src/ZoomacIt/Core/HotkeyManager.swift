@@ -25,6 +25,8 @@ final class HotkeyManager: @unchecked Sendable {
 
     /// Called when the Snip Save hotkey (⌃⇧4) is triggered.
     var onSnipSaveHotkey: (() -> Void)?
+    /// Called when the Record hotkey (⌃5) is triggered.
+    var onRecordHotkey: (() -> Void)?
 
     private var hotKeyRef: EventHotKeyRef?
     private var zoomHotKeyRef: EventHotKeyRef?
@@ -33,6 +35,7 @@ final class HotkeyManager: @unchecked Sendable {
     private var demoTypeHotKeyRef: EventHotKeyRef?
     private var snipHotKeyRef: EventHotKeyRef?
     private var snipSaveHotKeyRef: EventHotKeyRef?
+    private var recordHotKeyRef: EventHotKeyRef?
     private var eventHandlerRef: EventHandlerRef?
 
     /// Signature used to identify our hot-key events ('ZmIt')
@@ -44,6 +47,7 @@ final class HotkeyManager: @unchecked Sendable {
     private let demoTypeHotKeyID: UInt32 = 4
     private let snipHotKeyID: UInt32 = 5
     private let snipSaveHotKeyID: UInt32 = 6
+    private let recordHotKeyID: UInt32 = 3
 
     private init() {}
 
@@ -215,6 +219,25 @@ final class HotkeyManager: @unchecked Sendable {
         } else {
             NSLog("[HotkeyManager] Failed to register Snip Save hotkey: %d", snipSaveStatus)
         }
+        // Register Record hotkey
+        let recordKeyID = EventHotKeyID(signature: hotKeySignature, id: recordHotKeyID)
+        let recordStatus = RegisterEventHotKey(
+            Settings.shared.recordHotkeyKeyCode,
+            Settings.shared.recordHotkeyModifiers,
+            recordKeyID,
+            GetApplicationEventTarget(),
+            0,
+            &recordHotKeyRef
+        )
+
+        guard recordStatus == noErr else {
+            NSLog("[HotkeyManager] Failed to register record hotkey: %d", recordStatus)
+            return
+        }
+
+        NSLog("[HotkeyManager] Record hotkey registered: %@",
+              Settings.hotkeyDisplayString(keyCode: Settings.shared.recordHotkeyKeyCode,
+                                           modifiers: Settings.shared.recordHotkeyModifiers))
     }
 
     func stop() {
@@ -245,6 +268,10 @@ final class HotkeyManager: @unchecked Sendable {
         if let ref = snipSaveHotKeyRef {
             UnregisterEventHotKey(ref)
             snipSaveHotKeyRef = nil
+            }
+        if let ref = recordHotKeyRef {
+            UnregisterEventHotKey(ref)
+            recordHotKeyRef = nil
         }
         if let handler = eventHandlerRef {
             RemoveEventHandler(handler)
@@ -304,6 +331,10 @@ final class HotkeyManager: @unchecked Sendable {
         } else if hotKeyID.id == snipSaveHotKeyID {
             DispatchQueue.main.async { [weak self] in
                 self?.onSnipSaveHotkey?()
+            }
+        } else if hotKeyID.id == recordHotKeyID {
+            DispatchQueue.main.async { [weak self] in
+                self?.onRecordHotkey?()
             }
         }
     }

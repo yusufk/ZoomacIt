@@ -74,6 +74,8 @@ final class Settings: @unchecked Sendable {
         static let snipHotkeyModifiers = "hotkeySnipModifiers"
         static let snipSaveHotkeyKeyCode = "hotkeySnipSaveKeyCode"
         static let snipSaveHotkeyModifiers = "hotkeySnipSaveModifiers"
+        static let recordHotkeyKeyCode = "hotkeyRecordKeyCode"
+        static let recordHotkeyModifiers = "hotkeyRecordModifiers"
 
         // Draw
         static let defaultPenColor = "drawDefaultPenColor"
@@ -122,6 +124,8 @@ final class Settings: @unchecked Sendable {
             Keys.snipHotkeyModifiers: Int(controlKey),
             Keys.snipSaveHotkeyKeyCode: Int(kVK_ANSI_6),
             Keys.snipSaveHotkeyModifiers: Int(controlKey | shiftKey),
+            Keys.recordHotkeyKeyCode: Int(kVK_ANSI_5),
+            Keys.recordHotkeyModifiers: Int(controlKey),
 
             // Draw
             Keys.defaultPenColor: PenColor.red.rawValue,
@@ -229,6 +233,16 @@ final class Settings: @unchecked Sendable {
     var snipSaveHotkeyModifiers: UInt32 {
         get { UInt32(defaults.integer(forKey: Keys.snipSaveHotkeyModifiers)) }
         set { defaults.set(Int(newValue), forKey: Keys.snipSaveHotkeyModifiers) }
+    }
+
+    var recordHotkeyKeyCode: UInt32 {
+        get { UInt32(defaults.integer(forKey: Keys.recordHotkeyKeyCode)) }
+        set { defaults.set(Int(newValue), forKey: Keys.recordHotkeyKeyCode) }
+    }
+
+    var recordHotkeyModifiers: UInt32 {
+        get { UInt32(defaults.integer(forKey: Keys.recordHotkeyModifiers)) }
+        set { defaults.set(Int(newValue), forKey: Keys.recordHotkeyModifiers) }
     }
 
     // MARK: - Draw
@@ -339,6 +353,7 @@ final class Settings: @unchecked Sendable {
             Keys.demoTypeText, Keys.demoTypeSpeed,
             Keys.snipHotkeyKeyCode, Keys.snipHotkeyModifiers,
             Keys.snipSaveHotkeyKeyCode, Keys.snipSaveHotkeyModifiers,
+            Keys.recordHotkeyKeyCode, Keys.recordHotkeyModifiers,
             Keys.defaultPenColor, Keys.defaultPenWidth,
             Keys.highlighterOpacity, Keys.highlighterWidthMultiplier,
             Keys.spotlightDarkness,

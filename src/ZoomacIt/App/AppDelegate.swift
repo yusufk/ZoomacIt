@@ -13,6 +13,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var snipController: SnipWindowController?
     /// The app that was active before we took focus — restored on dismiss.
     private var previousApp: NSRunningApplication?
+    private var recordController: RecordController?
     /// Stores the full-resolution source image when transitioning from Zoom → Draw,
     /// so that Escape from Draw can return to Zoom mode.
     private var zoomSourceForDrawReturn: CGImage?
@@ -47,6 +48,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
         hotkeyManager.onSnipSaveHotkey = { [weak self] in
             self?.toggleSnip(saveToFile: true)
+        }
+        hotkeyManager.onRecordHotkey = { [weak self] in
+            self?.toggleRecord()
         }
         hotkeyManager.start()
     }
@@ -281,6 +285,26 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     /// Called from BreakTimerWindowController when the timer is dismissed.
     func breakTimerDidEnd() {
         breakTimerController = nil
+    }
+
+    // MARK: - Record
+
+    private func toggleRecord() {
+        if let controller = recordController, controller.isRecording {
+            controller.stopRecording()
+            return
+        }
+
+        let controller = RecordController()
+        controller.onRecordingStopped = { [weak self] url in
+            self?.recordController = nil
+            NSWorkspace.shared.activateFileViewerSelecting([url])
+        }
+        controller.onRecordingFailed = { [weak self] _ in
+            self?.recordController = nil
+        }
+        recordController = controller
+        controller.startRecording()
     }
 
     // MARK: - Preferences
