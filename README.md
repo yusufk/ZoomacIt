@@ -33,10 +33,20 @@ https://github.com/user-attachments/assets/5f7563e4-584b-4bab-99c4-70f7d3265f54
 | Zoom (Still Zoom) | ✅ |
 | Zoom (Live Zoom) | ✅ |
 | Draw | ✅ |
-| DemoType | |
+| DemoType | ✅ |
 | Break Timer | ✅ |
-| Snip | |
-| Record | |
+| Snip | ✅ |
+| Record | ✅ |
+
+## Differences from ZoomIt (Windows)
+
+| Area | ZoomIt (Windows) | ZoomacIt (macOS) |
+|---|---|---|
+| **Default draw shape** | Always freehand; no setting | Configurable via Settings → Draw. The modifier that would normally produce your default shape gives freehand instead (swap). |
+| **DemoType user-driven mode** | Any keypress injects N chars; all input blocked via keyboard hook | Not yet implemented (Phase 2). Currently auto-type only. |
+| **DemoType input** | File or clipboard (`[start]` prefix) | File, clipboard (`[start]`), or input dialog fallback |
+| **Snip** | Built into ZoomIt | Separate hotkey (⌃6 / ⌃⇧6) |
+| **Record** | Records the zoomed/annotated view | Records full screen only (no zoom overlay capture) |
 
 ## Architecture
 
