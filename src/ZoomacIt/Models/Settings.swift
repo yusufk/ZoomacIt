@@ -66,10 +66,25 @@ final class Settings: @unchecked Sendable {
         static let breakHotkeyModifiers = "hotkeyBreakModifiers"
         static let liveZoomHotkeyKeyCode = "hotkeyLiveZoomKeyCode"
         static let liveZoomHotkeyModifiers = "hotkeyLiveZoomModifiers"
+        static let demoTypeHotkeyKeyCode = "hotkeyDemoTypeKeyCode"
+        static let demoTypeHotkeyModifiers = "hotkeyDemoTypeModifiers"
+
+        static let snipHotkeyKeyCode = "hotkeySnipKeyCode"
+        static let snipHotkeyModifiers = "hotkeySnipModifiers"
+        static let snipSaveHotkeyKeyCode = "hotkeySnipSaveKeyCode"
+        static let snipSaveHotkeyModifiers = "hotkeySnipSaveModifiers"
+        static let recordHotkeyKeyCode = "hotkeyRecordKeyCode"
+        static let recordHotkeyModifiers = "hotkeyRecordModifiers"
+
+        // DemoType
+        static let demoTypeFilePath = "demoTypeFilePath"
+        static let demoTypeSpeed = "demoTypeSpeed"
+        static let demoTypeUserDriven = "demoTypeUserDriven"
 
         // Draw
         static let defaultPenColor = "drawDefaultPenColor"
         static let defaultPenWidth = "drawDefaultPenWidth"
+        static let defaultDrawShape = "drawDefaultShape"
         static let highlighterOpacity = "drawHighlighterOpacity"
         static let highlighterWidthMultiplier = "drawHighlighterWidthMultiplier"
         static let spotlightDarkness = "drawSpotlightDarkness"
@@ -106,10 +121,25 @@ final class Settings: @unchecked Sendable {
             Keys.breakHotkeyModifiers: Int(controlKey),
             Keys.liveZoomHotkeyKeyCode: Int(kVK_ANSI_4),
             Keys.liveZoomHotkeyModifiers: Int(controlKey),
+            Keys.demoTypeHotkeyKeyCode: Int(kVK_ANSI_7),
+            Keys.demoTypeHotkeyModifiers: Int(controlKey),
+
+            Keys.snipHotkeyKeyCode: Int(kVK_ANSI_6),
+            Keys.snipHotkeyModifiers: Int(controlKey),
+            Keys.snipSaveHotkeyKeyCode: Int(kVK_ANSI_6),
+            Keys.snipSaveHotkeyModifiers: Int(controlKey | shiftKey),
+            Keys.recordHotkeyKeyCode: Int(kVK_ANSI_5),
+            Keys.recordHotkeyModifiers: Int(controlKey),
+
+            // DemoType
+            Keys.demoTypeFilePath: "",
+            Keys.demoTypeSpeed: 55.0,
+            Keys.demoTypeUserDriven: false,
 
             // Draw
             Keys.defaultPenColor: PenColor.red.rawValue,
             Keys.defaultPenWidth: 3.0,
+            Keys.defaultDrawShape: "freehand",
             Keys.highlighterOpacity: 0.35,
             Keys.highlighterWidthMultiplier: 4.0,
             Keys.spotlightDarkness: 0.6,
@@ -175,6 +205,64 @@ final class Settings: @unchecked Sendable {
         set { defaults.set(Int(newValue), forKey: Keys.liveZoomHotkeyModifiers) }
     }
 
+    var demoTypeHotkeyKeyCode: UInt32 {
+        get { UInt32(defaults.integer(forKey: Keys.demoTypeHotkeyKeyCode)) }
+        set { defaults.set(Int(newValue), forKey: Keys.demoTypeHotkeyKeyCode) }
+    }
+
+    var demoTypeHotkeyModifiers: UInt32 {
+        get { UInt32(defaults.integer(forKey: Keys.demoTypeHotkeyModifiers)) }
+        set { defaults.set(Int(newValue), forKey: Keys.demoTypeHotkeyModifiers) }
+    }
+
+    // MARK: - DemoType
+
+    var demoTypeFilePath: String {
+        get { defaults.string(forKey: Keys.demoTypeFilePath) ?? "" }
+        set { defaults.set(newValue, forKey: Keys.demoTypeFilePath) }
+    }
+
+    var demoTypeSpeed: Double {
+        get { defaults.double(forKey: Keys.demoTypeSpeed) }
+        set { defaults.set(newValue, forKey: Keys.demoTypeSpeed) }
+    }
+
+    var demoTypeUserDriven: Bool {
+        get { defaults.bool(forKey: Keys.demoTypeUserDriven) }
+        set { defaults.set(newValue, forKey: Keys.demoTypeUserDriven) }
+    }
+
+    var snipHotkeyKeyCode: UInt32 {
+        get { UInt32(defaults.integer(forKey: Keys.snipHotkeyKeyCode)) }
+        set { defaults.set(Int(newValue), forKey: Keys.snipHotkeyKeyCode) }
+    }
+
+    var snipHotkeyModifiers: UInt32 {
+        get { UInt32(defaults.integer(forKey: Keys.snipHotkeyModifiers)) }
+        set { defaults.set(Int(newValue), forKey: Keys.snipHotkeyModifiers) }
+    }
+
+    var snipSaveHotkeyKeyCode: UInt32 {
+        get { UInt32(defaults.integer(forKey: Keys.snipSaveHotkeyKeyCode)) }
+        set { defaults.set(Int(newValue), forKey: Keys.snipSaveHotkeyKeyCode) }
+    }
+
+    var snipSaveHotkeyModifiers: UInt32 {
+        get { UInt32(defaults.integer(forKey: Keys.snipSaveHotkeyModifiers)) }
+        set { defaults.set(Int(newValue), forKey: Keys.snipSaveHotkeyModifiers) }
+    }
+
+    var recordHotkeyKeyCode: UInt32 {
+        get { UInt32(defaults.integer(forKey: Keys.recordHotkeyKeyCode)) }
+        set { defaults.set(Int(newValue), forKey: Keys.recordHotkeyKeyCode) }
+    }
+
+    var recordHotkeyModifiers: UInt32 {
+        get { UInt32(defaults.integer(forKey: Keys.recordHotkeyModifiers)) }
+        set { defaults.set(Int(newValue), forKey: Keys.recordHotkeyModifiers) }
+    }
+
+
     // MARK: - Draw
 
     var defaultPenColor: PenColor {
@@ -185,6 +273,11 @@ final class Settings: @unchecked Sendable {
     var defaultPenWidth: CGFloat {
         get { CGFloat(defaults.double(forKey: Keys.defaultPenWidth)) }
         set { defaults.set(Double(newValue), forKey: Keys.defaultPenWidth) }
+    }
+
+    var defaultDrawShape: ShapeType {
+        get { ShapeType(rawValue: defaults.string(forKey: Keys.defaultDrawShape) ?? "freehand") ?? .freehand }
+        set { defaults.set(newValue.rawValue, forKey: Keys.defaultDrawShape) }
     }
 
     var highlighterOpacity: CGFloat {

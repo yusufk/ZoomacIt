@@ -19,10 +19,20 @@ final class HotkeyManager: @unchecked Sendable {
     /// Called when the Live Zoom hotkey (⌃4) is triggered.
     var onLiveZoomHotkey: (() -> Void)?
 
+    /// Called when the DemoType hotkey (⌃7) is triggered.
+    var onDemoTypeHotkey: (() -> Void)?
+    var onSnipHotkey: (() -> Void)?
+    var onSnipSaveHotkey: (() -> Void)?
+    var onRecordHotkey: (() -> Void)?
+
     private var hotKeyRef: EventHotKeyRef?
     private var zoomHotKeyRef: EventHotKeyRef?
     private var breakHotKeyRef: EventHotKeyRef?
     private var liveZoomHotKeyRef: EventHotKeyRef?
+    private var demoTypeHotKeyRef: EventHotKeyRef?
+    private var snipHotKeyRef: EventHotKeyRef?
+    private var snipSaveHotKeyRef: EventHotKeyRef?
+    private var recordHotKeyRef: EventHotKeyRef?
     private var eventHandlerRef: EventHandlerRef?
 
     /// Signature used to identify our hot-key events ('ZmIt')
@@ -31,6 +41,10 @@ final class HotkeyManager: @unchecked Sendable {
     private let drawHotKeyID: UInt32 = 1
     private let breakHotKeyID: UInt32 = 2
     private let liveZoomHotKeyID: UInt32 = 3
+    private let demoTypeHotKeyID: UInt32 = 4
+    private let snipHotKeyID: UInt32 = 5
+    private let snipSaveHotKeyID: UInt32 = 6
+    private let recordHotKeyID: UInt32 = 7
 
     private init() {}
 
@@ -145,6 +159,25 @@ final class HotkeyManager: @unchecked Sendable {
         NSLog("[HotkeyManager] Live Zoom hotkey registered: %@",
               Settings.hotkeyDisplayString(keyCode: Settings.shared.liveZoomHotkeyKeyCode,
                                            modifiers: Settings.shared.liveZoomHotkeyModifiers))
+
+        // Register DemoType hotkey
+        let demoTypeKeyID = EventHotKeyID(signature: hotKeySignature, id: demoTypeHotKeyID)
+        let demoTypeStatus = RegisterEventHotKey(
+            Settings.shared.demoTypeHotkeyKeyCode,
+            Settings.shared.demoTypeHotkeyModifiers,
+            demoTypeKeyID,
+            GetApplicationEventTarget(),
+            0,
+            &demoTypeHotKeyRef
+        )
+
+        if demoTypeStatus != noErr {
+            NSLog("[HotkeyManager] Failed to register DemoType hotkey: %d", demoTypeStatus)
+        } else {
+            NSLog("[HotkeyManager] DemoType hotkey registered: %@",
+                  Settings.hotkeyDisplayString(keyCode: Settings.shared.demoTypeHotkeyKeyCode,
+                                               modifiers: Settings.shared.demoTypeHotkeyModifiers))
+        }
     }
 
     func stop() {
@@ -163,6 +196,10 @@ final class HotkeyManager: @unchecked Sendable {
         if let ref = liveZoomHotKeyRef {
             UnregisterEventHotKey(ref)
             liveZoomHotKeyRef = nil
+        }
+        if let ref = demoTypeHotKeyRef {
+            UnregisterEventHotKey(ref)
+            demoTypeHotKeyRef = nil
         }
         if let handler = eventHandlerRef {
             RemoveEventHandler(handler)
@@ -210,6 +247,22 @@ final class HotkeyManager: @unchecked Sendable {
         } else if hotKeyID.id == liveZoomHotKeyID {
             DispatchQueue.main.async { [weak self] in
                 self?.onLiveZoomHotkey?()
+            }
+        } else if hotKeyID.id == demoTypeHotKeyID {
+            DispatchQueue.main.async { [weak self] in
+                self?.onDemoTypeHotkey?()
+            }
+        } else if hotKeyID.id == snipHotKeyID {
+            DispatchQueue.main.async { [weak self] in
+                self?.onSnipHotkey?()
+            }
+        } else if hotKeyID.id == snipSaveHotKeyID {
+            DispatchQueue.main.async { [weak self] in
+                self?.onSnipSaveHotkey?()
+            }
+        } else if hotKeyID.id == recordHotKeyID {
+            DispatchQueue.main.async { [weak self] in
+                self?.onRecordHotkey?()
             }
         }
     }

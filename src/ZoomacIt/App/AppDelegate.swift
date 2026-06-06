@@ -8,6 +8,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var overlayController: OverlayWindowController?
     private var zoomController: StillZoomWindowController?
     private var liveZoomController: LiveZoomWindowController?
+    private var demoTypeController: DemoTypeController?
+    private var snipController: SnipWindowController?
+    private var recordController: RecordController?
     private var breakTimerController: BreakTimerWindowController?
     /// Stores the full-resolution source image when transitioning from Zoom → Draw,
     /// so that Escape from Draw can return to Zoom mode.
@@ -34,6 +37,18 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         }
         hotkeyManager.onLiveZoomHotkey = { [weak self] in
             self?.toggleLiveZoomMode()
+        }
+        hotkeyManager.onDemoTypeHotkey = { [weak self] in
+            self?.toggleDemoType()
+        }
+        hotkeyManager.onSnipHotkey = { [weak self] in
+            self?.toggleSnip(saveToFile: false)
+        }
+        hotkeyManager.onSnipSaveHotkey = { [weak self] in
+            self?.toggleSnip(saveToFile: true)
+        }
+        hotkeyManager.onRecordHotkey = { [weak self] in
+            self?.toggleRecord()
         }
         hotkeyManager.start()
     }
@@ -206,6 +221,50 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     /// Called from BreakTimerWindowController when the timer is dismissed.
     func breakTimerDidEnd() {
         breakTimerController = nil
+    }
+
+
+    // MARK: - Snip
+
+    private func toggleSnip(saveToFile: Bool = false) {
+        if let controller = snipController {
+            controller.dismiss()
+            snipController = nil
+            return
+        }
+        let controller = SnipWindowController()
+        controller.saveToFile = saveToFile
+        controller.onDismiss = { [weak self] in
+            self?.snipController = nil
+        }
+        controller.showSnipOverlay()
+        snipController = controller
+    }
+
+    // MARK: - Record
+
+    private func toggleRecord() {
+        NSLog("[AppDelegate] toggleRecord called")
+        if recordController == nil {
+            recordController = RecordController()
+            recordController?.onRecordingStopped = { [weak self] _ in
+                self?.recordController = nil
+            }
+        }
+        recordController?.toggleRecording()
+    }
+
+    // MARK: - DemoType
+
+    private func toggleDemoType() {
+        NSLog("[AppDelegate] toggleDemoType called")
+        if demoTypeController == nil {
+            demoTypeController = DemoTypeController()
+            demoTypeController?.onFinished = { [weak self] in
+                self?.demoTypeController = nil
+            }
+        }
+        demoTypeController?.start()
     }
 
     // MARK: - Preferences

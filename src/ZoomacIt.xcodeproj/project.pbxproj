@@ -40,6 +40,10 @@
 		BC7354984F865D5E2177B245 /* GeneralTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3EBA7640893729E53D436F6 /* GeneralTab.swift */; };
 		BDA90D7BFA5D8BEB00DCDB50 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00930854C1D0CC9734D203CD /* Assets.xcassets */; };
 		BFE4A25ECEF31F988FA3CBC0 /* HotkeyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2601F1F38544CFA522261C7D /* HotkeyManager.swift */; };
+		DE01DEM00001000000000001 /* DemoTypeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE01DEM00001000000000002 /* DemoTypeController.swift */; };
+		DE03SNP00001000000000001 /* SnipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE03SNP00001000000000002 /* SnipView.swift */; };
+		DE03SNP00002000000000001 /* SnipWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE03SNP00002000000000002 /* SnipWindowController.swift */; };
+		DE04REC00001000000000001 /* RecordController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE04REC00001000000000002 /* RecordController.swift */; };
 		C3267D6C7B3527E75BC44373 /* BreakTimerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CD11F607239F9F22444F64A /* BreakTimerState.swift */; };
 		C4AB6F7D6D54525206A767EE /* StillZoomWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01CA4E00EAC24379AB71E2EC /* StillZoomWindowController.swift */; };
 		C851D93A53C172EA7A4F10C6 /* BreakTimerStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35CEE9FA480AD8EA3412F68 /* BreakTimerStateTests.swift */; };
@@ -48,6 +52,7 @@
 		D4EFADF937D92699DC1BB041 /* DrawTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D373A688250139487280BB /* DrawTab.swift */; };
 		DD29E7A2CA8719348BC7F361 /* DrawingCanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E069EC8EF00483692203882 /* DrawingCanvasView.swift */; };
 		E5D3BADF6F8A9BB8A808F28D /* BreakTimerTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15F0FBF26F55526DA1BEF95E /* BreakTimerTab.swift */; };
+		DE02DEM00002000000000001 /* DemoTypeTab.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE02DEM00002000000000002 /* DemoTypeTab.swift */; };
 		E9920C14A86002F653920D7E /* OverlayWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 167B3BE9B273B7B056C41CD5 /* OverlayWindow.swift */; };
 		EFB76DD8BEEDF74D7AB326DD /* OverlayWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9059A7F84AC48FE489FC4064 /* OverlayWindowController.swift */; };
 		F5CC9D2C9692AEFD40DA3C32 /* TextInputController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 972CA1E50E6818D068D22333 /* TextInputController.swift */; };
@@ -75,11 +80,16 @@
 		122958CC072CEF51A4973BAD /* ZoomMathTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoomMathTests.swift; sourceTree = "<group>"; };
 		1292E2C0A68D01827A3396D0 /* HighlighterRendererTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlighterRendererTests.swift; sourceTree = "<group>"; };
 		15F0FBF26F55526DA1BEF95E /* BreakTimerTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreakTimerTab.swift; sourceTree = "<group>"; };
+		DE02DEM00002000000000002 /* DemoTypeTab.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoTypeTab.swift; sourceTree = "<group>"; };
 		167B3BE9B273B7B056C41CD5 /* OverlayWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverlayWindow.swift; sourceTree = "<group>"; };
 		1B27C880479A92E16A621C7B /* BreakTimerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BreakTimerView.swift; sourceTree = "<group>"; };
 		1F7CB4AB580AE896C4DAEE2C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		21CAEB2FA51070F7C3BCA3EC /* SettingsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTests.swift; sourceTree = "<group>"; };
 		2601F1F38544CFA522261C7D /* HotkeyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotkeyManager.swift; sourceTree = "<group>"; };
+		DE01DEM00001000000000002 /* DemoTypeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoTypeController.swift; sourceTree = "<group>"; };
+		DE03SNP00001000000000002 /* SnipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnipView.swift; sourceTree = "<group>"; };
+		DE03SNP00002000000000002 /* SnipWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnipWindowController.swift; sourceTree = "<group>"; };
+		DE04REC00001000000000002 /* RecordController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordController.swift; sourceTree = "<group>"; };
 		2C8A2C544CC0510AA2EA9A06 /* StrokeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrokeTests.swift; sourceTree = "<group>"; };
 		3091F75DCC9B6EA27DC8FA61 /* FontWeightOptionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontWeightOptionTests.swift; sourceTree = "<group>"; };
 		36559530A20E76797485A4D4 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
@@ -155,6 +165,7 @@
 			isa = PBXGroup;
 			children = (
 				15F0FBF26F55526DA1BEF95E /* BreakTimerTab.swift */,
+				DE02DEM00002000000000002 /* DemoTypeTab.swift */,
 				10D373A688250139487280BB /* DrawTab.swift */,
 				A3EBA7640893729E53D436F6 /* GeneralTab.swift */,
 				C4861D0131871D035CC07327 /* KeyRecorderView.swift */,
@@ -187,6 +198,8 @@
 				AFD499A142CC237EF664DD96 /* BreakTimerWindow.swift */,
 				BE3023CD2A9E7BBC51D21E79 /* BreakTimerWindowController.swift */,
 				A419159D2CE7F92C1ED334EB /* LiveZoomView.swift */,
+				DE03SNP00001000000000002 /* SnipView.swift */,
+				DE03SNP00002000000000002 /* SnipWindowController.swift */,
 				3884984CB5B8714C1CB6DAE7 /* LiveZoomWindowController.swift */,
 				167B3BE9B273B7B056C41CD5 /* OverlayWindow.swift */,
 				9059A7F84AC48FE489FC4064 /* OverlayWindowController.swift */,
@@ -231,6 +244,8 @@
 			isa = PBXGroup;
 			children = (
 				2601F1F38544CFA522261C7D /* HotkeyManager.swift */,
+				DE01DEM00001000000000002 /* DemoTypeController.swift */,
+				DE04REC00001000000000002 /* RecordController.swift */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -379,6 +394,7 @@
 				398052FC99D2C2CD71B1DFC5 /* AppDelegate.swift in Sources */,
 				C3267D6C7B3527E75BC44373 /* BreakTimerState.swift in Sources */,
 				E5D3BADF6F8A9BB8A808F28D /* BreakTimerTab.swift in Sources */,
+				DE02DEM00002000000000001 /* DemoTypeTab.swift in Sources */,
 				26292806CB72F8D077354D37 /* BreakTimerView.swift in Sources */,
 				1EAA0D96B867DF66AF0A6D2A /* BreakTimerWindow.swift in Sources */,
 				862780FF803ABA4C039BC6B7 /* BreakTimerWindowController.swift in Sources */,
@@ -390,6 +406,10 @@
 				BC7354984F865D5E2177B245 /* GeneralTab.swift in Sources */,
 				3ECA67329DFFE9622AF916FB /* HighlighterRenderer.swift in Sources */,
 				BFE4A25ECEF31F988FA3CBC0 /* HotkeyManager.swift in Sources */,
+				DE01DEM00001000000000001 /* DemoTypeController.swift in Sources */,
+				DE03SNP00001000000000001 /* SnipView.swift in Sources */,
+				DE03SNP00002000000000001 /* SnipWindowController.swift in Sources */,
+				DE04REC00001000000000001 /* RecordController.swift in Sources */,
 				792274BFCD677E75A47C4FB5 /* KeyRecorderView.swift in Sources */,
 				49E9DBB015C57215FC819A39 /* LiveZoomView.swift in Sources */,
 				8EF72DE97F310702D4924D99 /* LiveZoomWindowController.swift in Sources */,

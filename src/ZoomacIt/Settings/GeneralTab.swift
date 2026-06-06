@@ -13,6 +13,14 @@ struct GeneralTab: View {
     @AppStorage(Settings.Keys.drawHotkeyModifiers) private var drawModifiers: Int = Int(controlKey)
     @AppStorage(Settings.Keys.breakHotkeyKeyCode) private var breakKeyCode: Int = Int(kVK_ANSI_3)
     @AppStorage(Settings.Keys.breakHotkeyModifiers) private var breakModifiers: Int = Int(controlKey)
+    @AppStorage(Settings.Keys.snipHotkeyKeyCode) private var snipKeyCode: Int = Int(kVK_ANSI_6)
+    @AppStorage(Settings.Keys.snipHotkeyModifiers) private var snipModifiers: Int = Int(controlKey)
+    @AppStorage(Settings.Keys.snipSaveHotkeyKeyCode) private var snipSaveKeyCode: Int = Int(kVK_ANSI_6)
+    @AppStorage(Settings.Keys.snipSaveHotkeyModifiers) private var snipSaveModifiers: Int = Int(controlKey | shiftKey)
+    @AppStorage(Settings.Keys.recordHotkeyKeyCode) private var recordKeyCode: Int = Int(kVK_ANSI_5)
+    @AppStorage(Settings.Keys.recordHotkeyModifiers) private var recordModifiers: Int = Int(controlKey)
+    @AppStorage(Settings.Keys.demoTypeHotkeyKeyCode) private var demoTypeKeyCode: Int = Int(kVK_ANSI_7)
+    @AppStorage(Settings.Keys.demoTypeHotkeyModifiers) private var demoTypeModifiers: Int = Int(controlKey)
 
     @State private var launchAtLogin: Bool = SMAppService.mainApp.status == .enabled
 
@@ -23,6 +31,10 @@ struct GeneralTab: View {
                 HotkeyRow(label: "Live Zoom", keyCode: $liveZoomKeyCode, modifiers: $liveZoomModifiers)
                 HotkeyRow(label: "Draw", keyCode: $drawKeyCode, modifiers: $drawModifiers)
                 HotkeyRow(label: "Break Timer", keyCode: $breakKeyCode, modifiers: $breakModifiers)
+                HotkeyRow(label: "Record", keyCode: $recordKeyCode, modifiers: $recordModifiers)
+                HotkeyRow(label: "Snip", keyCode: $snipKeyCode, modifiers: $snipModifiers)
+                HotkeyRow(label: "Snip to File", keyCode: $snipSaveKeyCode, modifiers: $snipSaveModifiers)
+                HotkeyRow(label: "DemoType", keyCode: $demoTypeKeyCode, modifiers: $demoTypeModifiers)
             }
 
             Section {
@@ -38,6 +50,14 @@ struct GeneralTab: View {
         .onChange(of: drawModifiers) { _, _ in reregisterHotkeys() }
         .onChange(of: breakKeyCode) { _, _ in reregisterHotkeys() }
         .onChange(of: breakModifiers) { _, _ in reregisterHotkeys() }
+        .onChange(of: snipKeyCode) { _, _ in reregisterHotkeys() }
+        .onChange(of: snipModifiers) { _, _ in reregisterHotkeys() }
+        .onChange(of: snipSaveKeyCode) { _, _ in reregisterHotkeys() }
+        .onChange(of: snipSaveModifiers) { _, _ in reregisterHotkeys() }
+        .onChange(of: recordKeyCode) { _, _ in reregisterHotkeys() }
+        .onChange(of: recordModifiers) { _, _ in reregisterHotkeys() }
+        .onChange(of: demoTypeKeyCode) { _, _ in reregisterHotkeys() }
+        .onChange(of: demoTypeModifiers) { _, _ in reregisterHotkeys() }
     }
 
     private var launchAtLoginBinding: Binding<Bool> {
