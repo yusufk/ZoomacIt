@@ -178,6 +178,21 @@ final class HotkeyManager: @unchecked Sendable {
                   Settings.hotkeyDisplayString(keyCode: Settings.shared.demoTypeHotkeyKeyCode,
                                                modifiers: Settings.shared.demoTypeHotkeyModifiers))
         }
+
+        // Register Snip hotkey
+        let snipKeyID = EventHotKeyID(signature: hotKeySignature, id: snipHotKeyID)
+        RegisterEventHotKey(Settings.shared.snipHotkeyKeyCode, Settings.shared.snipHotkeyModifiers,
+                           snipKeyID, GetApplicationEventTarget(), 0, &snipHotKeyRef)
+
+        // Register Snip Save hotkey
+        let snipSaveKeyID = EventHotKeyID(signature: hotKeySignature, id: snipSaveHotKeyID)
+        RegisterEventHotKey(Settings.shared.snipSaveHotkeyKeyCode, Settings.shared.snipSaveHotkeyModifiers,
+                           snipSaveKeyID, GetApplicationEventTarget(), 0, &snipSaveHotKeyRef)
+
+        // Register Record hotkey
+        let recordKeyID = EventHotKeyID(signature: hotKeySignature, id: recordHotKeyID)
+        RegisterEventHotKey(Settings.shared.recordHotkeyKeyCode, Settings.shared.recordHotkeyModifiers,
+                           recordKeyID, GetApplicationEventTarget(), 0, &recordHotKeyRef)
     }
 
     func stop() {
@@ -200,6 +215,18 @@ final class HotkeyManager: @unchecked Sendable {
         if let ref = demoTypeHotKeyRef {
             UnregisterEventHotKey(ref)
             demoTypeHotKeyRef = nil
+        }
+        if let ref = snipHotKeyRef {
+            UnregisterEventHotKey(ref)
+            snipHotKeyRef = nil
+        }
+        if let ref = snipSaveHotKeyRef {
+            UnregisterEventHotKey(ref)
+            snipSaveHotKeyRef = nil
+        }
+        if let ref = recordHotKeyRef {
+            UnregisterEventHotKey(ref)
+            recordHotKeyRef = nil
         }
         if let handler = eventHandlerRef {
             RemoveEventHandler(handler)
