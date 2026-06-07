@@ -81,6 +81,11 @@ final class Settings: @unchecked Sendable {
         static let demoTypeSpeed = "demoTypeSpeed"
         static let demoTypeUserDriven = "demoTypeUserDriven"
 
+        // AI
+        static let geminiApiKey = "geminiApiKey"
+        static let geminiModel = "geminiModel"
+        static let aiEnabled = "aiEnabled"
+
         // Draw
         static let defaultPenColor = "drawDefaultPenColor"
         static let defaultPenWidth = "drawDefaultPenWidth"
@@ -262,6 +267,22 @@ final class Settings: @unchecked Sendable {
         set { defaults.set(Int(newValue), forKey: Keys.recordHotkeyModifiers) }
     }
 
+    // MARK: - AI
+
+    var geminiApiKey: String {
+        get { defaults.string(forKey: Keys.geminiApiKey) ?? "" }
+        set { defaults.set(newValue, forKey: Keys.geminiApiKey) }
+    }
+
+    var geminiModel: String {
+        get { defaults.string(forKey: Keys.geminiModel) ?? "gemini-flash-latest" }
+        set { defaults.set(newValue, forKey: Keys.geminiModel) }
+    }
+
+    var aiEnabled: Bool {
+        get { defaults.bool(forKey: Keys.aiEnabled) }
+        set { defaults.set(newValue, forKey: Keys.aiEnabled) }
+    }
 
     // MARK: - Draw
 
@@ -372,6 +393,8 @@ final class Settings: @unchecked Sendable {
             Keys.drawHotkeyKeyCode, Keys.drawHotkeyModifiers,
             Keys.breakHotkeyKeyCode, Keys.breakHotkeyModifiers,
             Keys.liveZoomHotkeyKeyCode, Keys.liveZoomHotkeyModifiers,
+            Keys.snipHotkeyKeyCode, Keys.snipHotkeyModifiers,
+            Keys.snipSaveHotkeyKeyCode, Keys.snipSaveHotkeyModifiers,
             Keys.defaultPenColor, Keys.defaultPenWidth,
             Keys.highlighterOpacity, Keys.highlighterWidthMultiplier,
             Keys.spotlightDarkness,

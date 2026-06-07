@@ -18,11 +18,14 @@ final class HotkeyManager: @unchecked Sendable {
 
     /// Called when the Live Zoom hotkey (⌃4) is triggered.
     var onLiveZoomHotkey: (() -> Void)?
+    /// Called when the Snip hotkey (⌃4) is triggered.
+    var onSnipHotkey: (() -> Void)?
+
+    /// Called when the Snip Save hotkey (⌃⇧4) is triggered.
+    var onSnipSaveHotkey: (() -> Void)?
 
     /// Called when the DemoType hotkey (⌃7) is triggered.
     var onDemoTypeHotkey: (() -> Void)?
-    var onSnipHotkey: (() -> Void)?
-    var onSnipSaveHotkey: (() -> Void)?
     var onRecordHotkey: (() -> Void)?
 
     private var hotKeyRef: EventHotKeyRef?
@@ -179,20 +182,49 @@ final class HotkeyManager: @unchecked Sendable {
                                                modifiers: Settings.shared.demoTypeHotkeyModifiers))
         }
 
-        // Register Snip hotkey
-        let snipKeyID = EventHotKeyID(signature: hotKeySignature, id: snipHotKeyID)
-        RegisterEventHotKey(Settings.shared.snipHotkeyKeyCode, Settings.shared.snipHotkeyModifiers,
-                           snipKeyID, GetApplicationEventTarget(), 0, &snipHotKeyRef)
-
-        // Register Snip Save hotkey
-        let snipSaveKeyID = EventHotKeyID(signature: hotKeySignature, id: snipSaveHotKeyID)
-        RegisterEventHotKey(Settings.shared.snipSaveHotkeyKeyCode, Settings.shared.snipSaveHotkeyModifiers,
-                           snipSaveKeyID, GetApplicationEventTarget(), 0, &snipSaveHotKeyRef)
 
         // Register Record hotkey
         let recordKeyID = EventHotKeyID(signature: hotKeySignature, id: recordHotKeyID)
         RegisterEventHotKey(Settings.shared.recordHotkeyKeyCode, Settings.shared.recordHotkeyModifiers,
                            recordKeyID, GetApplicationEventTarget(), 0, &recordHotKeyRef)
+        // Register Snip hotkey
+        let snipKeyID = EventHotKeyID(signature: hotKeySignature, id: snipHotKeyID)
+        let snipStatus = RegisterEventHotKey(
+            Settings.shared.snipHotkeyKeyCode,
+            Settings.shared.snipHotkeyModifiers,
+            snipKeyID,
+            GetApplicationEventTarget(),
+            0,
+            &snipHotKeyRef
+        )
+
+        guard snipStatus == noErr else {
+            NSLog("[HotkeyManager] Failed to register Snip hotkey: %d", snipStatus)
+            return
+        }
+
+        NSLog("[HotkeyManager] Snip hotkey registered: %@",
+              Settings.hotkeyDisplayString(keyCode: Settings.shared.snipHotkeyKeyCode,
+                                           modifiers: Settings.shared.snipHotkeyModifiers))
+
+        // Register Snip Save hotkey
+        let snipSaveKeyID = EventHotKeyID(signature: hotKeySignature, id: snipSaveHotKeyID)
+        let snipSaveStatus = RegisterEventHotKey(
+            Settings.shared.snipSaveHotkeyKeyCode,
+            Settings.shared.snipSaveHotkeyModifiers,
+            snipSaveKeyID,
+            GetApplicationEventTarget(),
+            0,
+            &snipSaveHotKeyRef
+        )
+
+        if snipSaveStatus == noErr {
+            NSLog("[HotkeyManager] Snip Save hotkey registered: %@",
+                  Settings.hotkeyDisplayString(keyCode: Settings.shared.snipSaveHotkeyKeyCode,
+                                               modifiers: Settings.shared.snipSaveHotkeyModifiers))
+        } else {
+            NSLog("[HotkeyManager] Failed to register Snip Save hotkey: %d", snipSaveStatus)
+        }
     }
 
     func stop() {

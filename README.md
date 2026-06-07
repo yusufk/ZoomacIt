@@ -36,6 +36,7 @@ https://github.com/user-attachments/assets/5f7563e4-584b-4bab-99c4-70f7d3265f54
 | DemoType | ✅ |
 | Break Timer | ✅ |
 | Snip | ✅ |
+<<<<<<< HEAD
 | Record | ✅ |
 
 ## Differences from ZoomIt (Windows)
@@ -47,6 +48,9 @@ https://github.com/user-attachments/assets/5f7563e4-584b-4bab-99c4-70f7d3265f54
 | **DemoType input** | File or clipboard (`[start]` prefix) | File, clipboard (`[start]`), or input dialog fallback |
 | **Snip** | Built into ZoomIt | Separate hotkey (⌃6 / ⌃⇧6) |
 | **Record** | Records the zoomed/annotated view | Records full screen only (no zoom overlay capture) |
+=======
+| Record | |
+>>>>>>> origin/feature/ai-snip
 
 ## Architecture
 

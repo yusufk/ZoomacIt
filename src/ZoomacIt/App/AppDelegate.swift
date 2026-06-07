@@ -12,6 +12,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var snipController: SnipWindowController?
     private var recordController: RecordController?
     private var breakTimerController: BreakTimerWindowController?
+    /// The app that was active before we took focus — restored on dismiss.
+    private var previousApp: NSRunningApplication?
     /// Stores the full-resolution source image when transitioning from Zoom → Draw,
     /// so that Escape from Draw can return to Zoom mode.
     private var zoomSourceForDrawReturn: CGImage?
@@ -55,6 +57,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationSupportsSecureRestorableState(_ app: NSApplication) -> Bool {
         true
+    }
+
+    // MARK: - Focus Management
+
+    private func savePreviousApp() {
+        previousApp = NSWorkspace.shared.frontmostApplication
+    }
+
+    private func restorePreviousApp() {
+        previousApp?.activate()
+        previousApp = nil
     }
 
     // MARK: - Draw Mode
@@ -205,6 +218,33 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         controller.showLiveZoom()
     }
 
+    // MARK: - Snip
+
+    private func toggleSnip(saveToFile: Bool = false) {
+        if let controller = snipController {
+            controller.dismiss()
+            snipController = nil
+            return
+        }
+
+        savePreviousApp()
+        let controller = SnipWindowController()
+        controller.saveToFile = saveToFile
+        controller.onDismiss = { [weak self] in
+            self?.snipController = nil
+            // Delay restore slightly to ensure window is fully closed
+            DispatchQueue.main.async {
+                self?.restorePreviousApp()
+            }
+        }
+        controller.onShowFailed = { [weak self] in
+            self?.snipController = nil
+            self?.restorePreviousApp()
+        }
+        controller.showSnipOverlay()
+        snipController = controller
+    }
+
     // MARK: - Break Timer
 
     private func toggleBreakTimer() {
@@ -223,23 +263,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         breakTimerController = nil
     }
 
-
-    // MARK: - Snip
-
-    private func toggleSnip(saveToFile: Bool = false) {
-        if let controller = snipController {
-            controller.dismiss()
-            snipController = nil
-            return
-        }
-        let controller = SnipWindowController()
-        controller.saveToFile = saveToFile
-        controller.onDismiss = { [weak self] in
-            self?.snipController = nil
-        }
-        controller.showSnipOverlay()
-        snipController = controller
-    }
 
     // MARK: - Record
 

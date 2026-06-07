@@ -23,6 +23,9 @@ struct GeneralTab: View {
     @AppStorage(Settings.Keys.demoTypeHotkeyModifiers) private var demoTypeModifiers: Int = Int(controlKey)
 
     @State private var launchAtLogin: Bool = SMAppService.mainApp.status == .enabled
+    @AppStorage(Settings.Keys.geminiApiKey) private var geminiApiKey: String = ""
+    @AppStorage(Settings.Keys.geminiModel) private var geminiModel: String = "gemini-flash-latest"
+    @AppStorage(Settings.Keys.aiEnabled) private var aiEnabled: Bool = false
 
     var body: some View {
         Form {
@@ -35,6 +38,28 @@ struct GeneralTab: View {
                 HotkeyRow(label: "Snip", keyCode: $snipKeyCode, modifiers: $snipModifiers)
                 HotkeyRow(label: "Snip to File", keyCode: $snipSaveKeyCode, modifiers: $snipSaveModifiers)
                 HotkeyRow(label: "DemoType", keyCode: $demoTypeKeyCode, modifiers: $demoTypeModifiers)
+                HotkeyRow(label: "Snip", keyCode: $snipKeyCode, modifiers: $snipModifiers)
+                HotkeyRow(label: "Snip to File", keyCode: $snipSaveKeyCode, modifiers: $snipSaveModifiers)
+            }
+
+            Section("AI Features") {
+                Toggle("Enable AI (requires Gemini API key)", isOn: $aiEnabled)
+                HStack {
+                    SecureField("Gemini API Key", text: $geminiApiKey)
+                        .textFieldStyle(.roundedBorder)
+                    Button("Get Free Key") {
+                        NSWorkspace.shared.open(URL(string: "https://aistudio.google.com/apikey")!)
+                    }
+                }
+                .disabled(!aiEnabled)
+                Picker("Model", selection: $geminiModel) {
+                    Text("Gemini Flash (Latest)").tag("gemini-flash-latest")
+                    Text("Gemini 2.0 Flash").tag("gemini-2.0-flash")
+                    Text("Gemini 2.0 Flash-Lite").tag("gemini-2.0-flash-lite")
+                    Text("Gemini 2.5 Flash").tag("gemini-2.5-flash-preview-05-20")
+                    Text("Gemini 2.5 Pro").tag("gemini-2.5-pro-preview-05-06")
+                }
+                .disabled(!aiEnabled)
             }
 
             Section {
