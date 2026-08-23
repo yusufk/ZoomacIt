@@ -1,9 +1,11 @@
 # Contributors
 
-Thank you to everyone who contributes to ZoomacIt through code, documentation, design feedback, bug reports, feature requests, and community support.
+## Fork maintainer
 
-GitHub maintains the canonical contributor list for this repository:
+- **Yusuf Kaka** ([@yusufk](https://github.com/yusufk))
 
-https://github.com/07JP27/ZoomacIt/graphs/contributors
+## Original project
 
-If you contributed in a way that is not reflected there, please open an issue or pull request so we can acknowledge it.
+Created by [**@07JP27**](https://github.com/07JP27). Archived 4 August 2026.
+
+- [Original contributors](https://github.com/07JP27/ZoomacIt/graphs/contributors)

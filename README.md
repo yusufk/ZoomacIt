@@ -3,145 +3,94 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/07JP27/ZoomacIt/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/07JP27/ZoomacIt/ci.yml?style=flat&label=CI" alt="CI"></a>
-  <a href="https://github.com/07JP27/ZoomacIt/releases/latest"><img src="https://img.shields.io/github/v/release/07JP27/ZoomacIt?style=flat" alt="Release"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/github/license/07JP27/ZoomacIt?style=flat" alt="License"></a>
-  <a href="CONTRIBUTORS.md"><img src="https://img.shields.io/github/contributors/07JP27/ZoomacIt?style=flat" alt="Contributors"></a>
+  <a href="https://github.com/yusufk/ZoomacIt/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/yusufk/ZoomacIt/ci.yml?style=flat&label=CI" alt="CI"></a>
+  <a href="https://github.com/yusufk/ZoomacIt/releases/latest"><img src="https://img.shields.io/github/v/release/yusufk/ZoomacIt?style=flat" alt="Release"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/yusufk/ZoomacIt?style=flat" alt="License"></a>
+  <a href="CONTRIBUTORS.md"><img src="https://img.shields.io/github/contributors/yusufk/ZoomacIt?style=flat" alt="Contributors"></a>
   <img src="https://img.shields.io/badge/Swift-6.0-orange?style=flat&logo=swift&logoColor=white" alt="Swift 6.0">
   <img src="https://img.shields.io/badge/macOS-target%2015%2B%20%7C%20supported%2026%2B-blue?style=flat&logo=apple&logoColor=white" alt="macOS target 15+ | supported 26+">
-  <a href="https://github.com/sponsors/07JP27"><img src="https://img.shields.io/badge/Sponsor-%E2%9D%A4-ea4aaa?style=flat&logo=githubsponsors&logoColor=white" alt="Sponsor"></a>
 </p>
 
 <p align="center">English | <a href="README_ja.md">日本語</a></p>
 
 ---
 
-ZoomacIt is a native macOS menu bar app inspired by [ZoomIt for Windows](https://learn.microsoft.com/en-us/sysinternals/downloads/zoomit).
-The project aims for feature compatibility with ZoomIt, providing system-wide hotkeys, smooth zooming, and on-screen annotation while minimizing required permissions.
+> ### 🔱 This is an actively maintained fork
+>
+> The original [07JP27/ZoomacIt](https://github.com/07JP27/ZoomacIt) was **archived by its author on 4 August 2026** after Microsoft Sysinternals shipped an official [ZoomIt for macOS](https://learn.microsoft.com/en-us/sysinternals/downloads/zoomit) (["Sherlocked"](https://github.com/07JP27/ZoomacIt/issues/42)).
+>
+> This fork ([**yusufk/ZoomacIt**](https://github.com/yusufk/ZoomacIt)) continues development. Contributions and issues are welcome.
+>
+> Thanks to [**@07JP27**](https://github.com/07JP27) and all original contributors for the foundation. 🙏
 
-> **📖 Looking for installation, usage, or keyboard shortcuts?**
-> Visit the **[ZoomacIt Documentation Site](https://zoomacit.07jp27.net/)**.
+ZoomacIt is a native macOS menu bar app inspired by [ZoomIt for Windows](https://learn.microsoft.com/en-us/sysinternals/downloads/zoomit).
 
 https://github.com/user-attachments/assets/5f7563e4-584b-4bab-99c4-70f7d3265f54
 
-[🎥 Watch in high resolution](images/demo.mp4)
+## Why this fork?
 
-## Feature coverage
+Microsoft's [ZoomIt for Mac](https://github.com/microsoft/ZoomitForMac) (MIT) is a faithful port of the Windows version — but brings Windows UX conventions to macOS.
 
-| Feature | Status |
-|---|---|
-| Zoom (Still Zoom) | ✅ |
-| Zoom (Live Zoom) | ✅ |
-| Draw | ✅ |
-| DemoType | ✅ |
-| Break Timer | ✅ |
-| Snip | ✅ |
-<<<<<<< HEAD
-| Record | ✅ |
+**ZoomacIt is mac-native by design:**
 
-## Differences from ZoomIt (Windows)
+- **Pure AppKit** — Swift 6 + AppKit. Feels like a Mac app because it *is* one.
+- **AI-powered Snip** — Gemini AI analysis of screen regions (explain, summarise, extract text).
+- **No telemetry** — Zero network calls except the optional AI feature (your key, your data).
+- **GPL-3.0** — Stronger community protection. Forks must stay open.
+- **Lightweight** — No external dependencies. XcodeGen, not SPM.
 
-| Area | ZoomIt (Windows) | ZoomacIt (macOS) |
+> **Looking for Microsoft's version?** [Sysinternals ZoomIt for Mac](https://github.com/microsoft/ZoomitForMac) is available via `brew install --cask microsoft/sysinternalstap/zoomit`.
+
+## Installation
+
+### Homebrew
+
+```bash
+brew tap yusufk/tap
+brew install --cask zoomacit
+```
+
+### Manual
+
+Download the `.dmg` from [Releases](https://github.com/yusufk/ZoomacIt/releases/latest), drag to Applications, then:
+
+```bash
+xattr -cr /Applications/ZoomacIt.app
+```
+
+## Features
+
+| Feature | Status | Notes |
 |---|---|---|
-| **Default draw shape** | Always freehand; no setting | Configurable via Settings → Draw. The modifier that would normally produce your default shape gives freehand instead (swap). |
-| **DemoType user-driven mode** | Any keypress injects N chars; all input blocked via keyboard hook | Not yet implemented (Phase 2). Currently auto-type only. |
-| **DemoType input** | File or clipboard (`[start]` prefix) | File, clipboard (`[start]`), or input dialog fallback |
-| **Snip** | Built into ZoomIt | Separate hotkey (⌃6 / ⌃⇧6) |
-| **Record** | Records the zoomed/annotated view | Records full screen only (no zoom overlay capture) |
-=======
-| Record | |
->>>>>>> origin/feature/ai-snip
-
-## Architecture
-
-Pure **Swift 6 + AppKit** (SwiftUI used only for Settings UI). macOS 15+. No external dependencies. The Xcode project is generated by [xcodegen](https://github.com/yonaskolb/XcodeGen) from `src/project.yml`.
-
-| Layer | Directory | Purpose |
-|---|---|---|
-| **App** | `src/ZoomacIt/App/` | Entry point (`main.swift`), `AppDelegate`, `StatusBarController` (menu bar) |
-| **Core** | `src/ZoomacIt/Core/` | `HotkeyManager` — Carbon `RegisterEventHotKey` API |
-| **Overlay** | `src/ZoomacIt/Overlay/` | Fullscreen overlay windows, zoom controllers, `ZoomMath` |
-| **Draw** | `src/ZoomacIt/Draw/` | `DrawingCanvasView` (3-layer compositing), renderers, `StrokeManager` |
-| **Settings** | `src/ZoomacIt/Settings/` | SwiftUI-based preferences with hotkey customization |
-| **Models / Utils** | `src/ZoomacIt/Models/`, `Utilities/` | State models (`DrawingState`, `Stroke`, `Settings`), extensions |
-
-Detailed design documents are in [`design/`](design/).
+| Zoom (Still) | ✅ | |
+| Zoom (Live) | ✅ | Real-time magnification |
+| Draw | ✅ | Spotlight, pen cursor, configurable default shape |
+| DemoType | ✅ | File/clipboard input, control keywords |
+| Break Timer | ✅ | |
+| Snip | ✅ | Region → clipboard (⌃6) / file (⌃⇧6) |
+| AI Snip | ✅ | Gemini analysis via context menu |
+| Record | ✅ | Full screen recording (⌃5) |
 
 ## Development
 
-### Prerequisites
-
-- macOS 15+ (build target)
-- Xcode (with Swift 6 toolchain)
-
-> **Compatibility note:** The minimum deployment target is macOS 15, but the app is tested and officially supported on macOS 26 only. Earlier versions may work but are not guaranteed.
-- [xcodegen](https://github.com/yonaskolb/XcodeGen) (`brew install xcodegen`) — only needed when editing `src/project.yml`
-
-### Build commands
-
 ```bash
 make build       # Debug build
-make test        # Run unit tests
-make run         # Build and launch the app
-make release     # Release build (Developer ID signed)
-make notarize    # Release build + Apple notarization
-make dmg VERSION=1.0.0  # Notarize + create distributable DMG
-make clean       # Clean build artifacts
-make generate    # Regenerate .xcodeproj (after editing src/project.yml)
-make docs        # Start local documentation dev server
-make docs-build  # Build documentation site
+make test        # Run tests
+make run         # Build and launch
+make release     # Release build (signed)
+make dmg VERSION=1.0.0  # Create distributable DMG
 ```
 
-### Building as a contributor
-
-The project's `src/project.yml` hardcodes the maintainer's team ID. To build and run locally, replace it with your own:
-
-1. Find your team ID: `security find-certificate -c "Apple Development" -p | openssl x509 -noout -subject | grep -o 'OU=[^,]*' | cut -d= -f2`
-2. Edit `src/project.yml` — replace the `DEVELOPMENT_TEAM` value with yours (appears twice)
-3. Regenerate and build:
-   ```bash
-   make generate
-   make build
-   make run
-   ```
-
-> **Note:** A valid code signature is required for macOS to launch the app and grant Screen Recording (TCC) permission. Do not commit your team ID — this is a local-only change.
-
-### Code signing and notarization
-
-macOS Gatekeeper blocks unsigned apps downloaded from the internet. To distribute ZoomacIt without requiring users to bypass Gatekeeper warnings, the app must be signed with a Developer ID certificate and notarized by Apple.
-
-Copy `.env.example` to `.env` and fill in your credentials:
-
-```bash
-cp .env.example .env
-```
-
-| Variable | Description |
-| --- | --- |
-| `APPLE_ID` | Your Apple ID email address |
-| `TEAM_ID` | Your Apple Developer Team ID (used by `make release` / `make notarize`) |
-| `APP_PASSWORD` | An [app-specific password](https://support.apple.com/en-us/102654) generated at appleid.apple.com |
-| `DEVELOPER_NAME` | Your name as it appears on your Developer ID certificate |
-
-Then run:
-
-```bash
-make dmg VERSION=1.0.0
-```
-
-This builds a Release binary signed with your Developer ID, submits it to Apple for notarization, staples the notarization ticket, and packages the result into a distributable DMG.
-
-> **Note:** Notarization requires an [Apple Developer Program](https://developer.apple.com/programs/) membership. The `.env` file is gitignored and must never be committed.
-
-## Contributors
-
-<a href="https://github.com/07JP27/ZoomacIt/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=07JP27/ZoomacIt" alt="Contributors" />
-</a>
-
-Thanks to everyone who helps improve ZoomacIt. See [CONTRIBUTORS.md](CONTRIBUTORS.md) for acknowledgments.
+See [PLAN.md](PLAN.md) for roadmap. Architecture docs in [`design/`](design/).
 
 ## License
 
-This project is licensed under the [GNU General Public License v3.0](LICENSE).
+[GNU General Public License v3.0](LICENSE)
+
+## Contributors
+
+<a href="https://github.com/yusufk/ZoomacIt/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=yusufk/ZoomacIt" alt="Contributors" />
+</a>
+
+Built on the work of [**@07JP27**](https://github.com/07JP27) and [original contributors](https://github.com/07JP27/ZoomacIt/graphs/contributors).
