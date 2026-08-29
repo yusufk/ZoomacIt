@@ -9,7 +9,7 @@
   <a href="CONTRIBUTORS.md"><img src="https://img.shields.io/github/contributors/yusufk/ZoomacIt?style=flat" alt="Contributors"></a>
   <img src="https://img.shields.io/badge/Swift-6.0-orange?style=flat&logo=swift&logoColor=white" alt="Swift 6.0">
   <img src="https://img.shields.io/badge/macOS-target%2015%2B%20%7C%20supported%2026%2B-blue?style=flat&logo=apple&logoColor=white" alt="macOS target 15+ | supported 26+">
-  <a href="https://github.com/sponsors/07JP27"><img src="https://img.shields.io/badge/Sponsor-%E2%9D%A4-ea4aaa?style=flat&logo=githubsponsors&logoColor=white" alt="Sponsor"></a>
+  <a href="https://buymeacoffee.com/yusufk"><img src="https://img.shields.io/badge/Buy%20Me%20A%20Coffee-yusufk-yellow?style=flat&logo=buy-me-a-coffee&logoColor=white" alt="Buy Me A Coffee"></a>
 </p>
 
 <p align="center"><a href="README.md">English</a> | 日本語</p>
