@@ -3,10 +3,10 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/07JP27/ZoomacIt/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/07JP27/ZoomacIt/ci.yml?style=flat&label=CI" alt="CI"></a>
-  <a href="https://github.com/07JP27/ZoomacIt/releases/latest"><img src="https://img.shields.io/github/v/release/07JP27/ZoomacIt?style=flat" alt="Release"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/github/license/07JP27/ZoomacIt?style=flat" alt="License"></a>
-  <a href="CONTRIBUTORS.md"><img src="https://img.shields.io/github/contributors/07JP27/ZoomacIt?style=flat" alt="Contributors"></a>
+  <a href="https://github.com/yusufk/ZoomacIt/actions/workflows/ci.yml"><img src="https://img.shields.io/github/actions/workflow/status/yusufk/ZoomacIt/ci.yml?style=flat&label=CI" alt="CI"></a>
+  <a href="https://github.com/yusufk/ZoomacIt/releases/latest"><img src="https://img.shields.io/github/v/release/yusufk/ZoomacIt?style=flat" alt="Release"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/yusufk/ZoomacIt?style=flat" alt="License"></a>
+  <a href="CONTRIBUTORS.md"><img src="https://img.shields.io/github/contributors/yusufk/ZoomacIt?style=flat" alt="Contributors"></a>
   <img src="https://img.shields.io/badge/Swift-6.0-orange?style=flat&logo=swift&logoColor=white" alt="Swift 6.0">
   <img src="https://img.shields.io/badge/macOS-target%2015%2B%20%7C%20supported%2026%2B-blue?style=flat&logo=apple&logoColor=white" alt="macOS target 15+ | supported 26+">
   <a href="https://github.com/sponsors/07JP27"><img src="https://img.shields.io/badge/Sponsor-%E2%9D%A4-ea4aaa?style=flat&logo=githubsponsors&logoColor=white" alt="Sponsor"></a>

@@ -47,8 +47,13 @@ Microsoft's [ZoomIt for Mac](https://github.com/microsoft/ZoomitForMac) (MIT) is
 
 ```bash
 brew tap yusufk/tap
+brew trust yusufk/tap
 brew install --cask zoomacit
 ```
+
+> `brew trust` is required on Homebrew 4.x+ before installing casks from a
+> third-party tap. If you prefer not to trust the whole tap, run
+> `brew trust --cask yusufk/tap/zoomacit` to trust only this cask.
 
 ### Manual
 

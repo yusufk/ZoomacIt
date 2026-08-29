@@ -14,7 +14,7 @@ hero:
       link: /ja/installation
     - theme: alt
       text: GitHub で見る
-      link: https://github.com/07JP27/ZoomacIt
+      link: https://github.com/yusufk/ZoomacIt
 
 features:
   - icon: 🔍

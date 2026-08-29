@@ -2,25 +2,42 @@
 
 ## システム要件
 
-- **macOS 26**（Tahoe）以降
+- **macOS 15**（Sequoia）以降
 - **画面収録**権限（初回起動時にプロンプトが表示されます）
+- ユニバーサルバイナリ — Apple Silicon と Intel Mac の両方でネイティブ動作します
 
-## ダウンロードとインストール
+## Homebrew（推奨）
 
-1. [Releases ページ](https://github.com/07JP27/ZoomacIt/releases)から最新の `.dmg` をダウンロード
+```bash
+brew tap yusufk/tap
+brew trust yusufk/tap
+brew install --cask zoomacit
+```
+
+::: tip
+Homebrew 4.x 以降では、サードパーティタップの cask をインストールする前に
+`brew trust` が必要です。タップ全体ではなくこの cask のみを信頼する場合は、
+`brew trust --cask yusufk/tap/zoomacit` を実行してください。
+:::
+
+cask が検疫フラグを自動的に解除するため、追加の手順は不要です。
+
+## 手動ダウンロードとインストール
+
+1. [Releases ページ](https://github.com/yusufk/ZoomacIt/releases/latest)から最新の `.dmg` をダウンロード
 2. `.dmg` を開き、**ZoomacIt.app** を **Applications** フォルダにドラッグ
 3. Applications から ZoomacIt を起動
 
 ## 検疫フラグの解除
 
-「Appleは、"ZoomacIt"にMacに損害を与えたり、プライバシーを侵害する可能性のあるマルウェアが含まれていないことを検証できませんでした。」という警告が表示された場合は、**ターミナル**で以下のコマンドを実行して検疫フラグを解除してください：
+手動でインストールし、「Appleは、"ZoomacIt"にMacに損害を与えたり、プライバシーを侵害する可能性のあるマルウェアが含まれていないことを検証できませんでした。」という警告が表示された場合は、**ターミナル**で以下のコマンドを実行して検疫フラグを解除してください：
 
 ```bash
 xattr -cr /Applications/ZoomacIt.app
 ```
 
 ::: warning
-[ソースコード](https://github.com/07JP27/ZoomacIt)の内容を確認の上、自己責任で実行してください。
+[ソースコード](https://github.com/yusufk/ZoomacIt)の内容を確認の上、自己責任で実行してください。
 :::
 
 ## 画面収録権限の許可

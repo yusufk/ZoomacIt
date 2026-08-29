@@ -2,25 +2,42 @@
 
 ## System Requirements
 
-- **macOS 26** (Tahoe) or later
+- **macOS 15** (Sequoia) or later
 - **Screen Recording** permission (prompted on first launch)
+- Universal binary — runs natively on both Apple Silicon and Intel Macs
 
-## Download & Install
+## Homebrew (recommended)
 
-1. Download the latest `.dmg` from the [Releases page](https://github.com/07JP27/ZoomacIt/releases)
+```bash
+brew tap yusufk/tap
+brew trust yusufk/tap
+brew install --cask zoomacit
+```
+
+::: tip
+`brew trust` is required on Homebrew 4.x+ before installing casks from a
+third-party tap. To trust only this cask instead of the whole tap, run
+`brew trust --cask yusufk/tap/zoomacit`.
+:::
+
+The cask removes the quarantine flag for you, so no extra steps are needed.
+
+## Manual Download & Install
+
+1. Download the latest `.dmg` from the [Releases page](https://github.com/yusufk/ZoomacIt/releases/latest)
 2. Open the `.dmg` file and drag **ZoomacIt.app** to the **Applications** folder
 3. Open ZoomacIt from Applications
 
 ## Removing the Quarantine Flag
 
-If you see the warning *"Apple could not verify 'ZoomacIt' is free of malware that may harm your Mac or compromise your privacy"*, run the following command in **Terminal** to remove the quarantine flag:
+If you installed manually and see the warning *"Apple could not verify 'ZoomacIt' is free of malware that may harm your Mac or compromise your privacy"*, run the following command in **Terminal** to remove the quarantine flag:
 
 ```bash
 xattr -cr /Applications/ZoomacIt.app
 ```
 
 ::: warning
-Please review the [source code](https://github.com/07JP27/ZoomacIt) and run at your own risk.
+Please review the [source code](https://github.com/yusufk/ZoomacIt) and run at your own risk.
 :::
 
 ## Granting Screen Recording Permission
