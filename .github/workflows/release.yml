@@ -62,10 +62,22 @@ jobs:
             -scheme ZoomacIt \
             -configuration Release \
             -derivedDataPath build \
+            ARCHS="arm64 x86_64" \
+            ONLY_ACTIVE_ARCH=NO \
             CODE_SIGN_IDENTITY="-" \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO \
             build
+
+      - name: Verify universal binary
+        run: |
+          BIN="build/Build/Products/Release/ZoomacIt.app/Contents/MacOS/ZoomacIt"
+          echo "Architectures in $BIN:"
+          lipo -archs "$BIN"
+          # Fail the release if it is not universal (both arches present)
+          lipo -archs "$BIN" | grep -q "arm64" && lipo -archs "$BIN" | grep -q "x86_64" \
+            || { echo "ERROR: binary is not universal (arm64 + x86_64 required)"; exit 1; }
+          echo "OK: universal binary"
 
       - name: Ad-hoc codesign
         run: |

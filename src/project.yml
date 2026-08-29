@@ -11,6 +11,12 @@ settings:
     SWIFT_VERSION: "6.0"
     MACOSX_DEPLOYMENT_TARGET: "15.0"
     ENABLE_HARDENED_RUNTIME: true
+    # Build a universal binary (Apple Silicon + Intel) for Release, so the
+    # distributed DMG runs on both arm64 and x86_64 Macs. Without this, a build
+    # on an Apple Silicon runner produces an arm64-only app that fails to launch
+    # on Intel with "incorrect executable format".
+    ARCHS: "arm64 x86_64"
+    ONLY_ACTIVE_ARCH: false
 
 targets:
   ZoomacIt:
