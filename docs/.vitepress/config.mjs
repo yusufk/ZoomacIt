@@ -67,6 +67,7 @@ export default defineConfig({
                   { text: 'ズーム', link: '/ja/usage/zoom' },
                   { text: 'ドロー', link: '/ja/usage/draw' },
                   { text: 'スニップ', link: '/ja/usage/snip' },
+                  { text: 'AIスニップ', link: '/ja/usage/ai-snip' },
                   { text: 'レコード', link: '/ja/usage/record' },
                   { text: 'デモタイプ', link: '/ja/usage/demo-type' },
                   { text: '休憩タイマー', link: '/ja/usage/break-timer' },
